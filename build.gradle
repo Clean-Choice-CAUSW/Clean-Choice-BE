@@ -45,9 +45,6 @@ dependencies {
 	// Discord LogBack
 	implementation 'com.github.napstr:logback-discord-appender:1.0.0'
 
-	// S3
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
@@ -59,6 +56,43 @@ dependencies {
 
 	// h2 database(테스트용)
 	runtimeOnly 'com.h2database:h2'
+
+	// annotation config
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// typeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// mac m1 아키텍쳐에서 경고 해결
+	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
+
+	// AWS S3 SDK
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
+
+	// Webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// swagger-ui
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'org.jetbrains:annotations:24.0.0'
+
+
+	// junitA
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 
 }
