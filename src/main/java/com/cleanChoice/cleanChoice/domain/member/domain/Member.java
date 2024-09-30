@@ -14,7 +14,7 @@ import lombok.*;
 @Table(name = "member")
 public class Member extends BaseEntity {
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "login_id", nullable = false, unique = true)
     private String loginId;
 
     @Column(name = "password", nullable = false)

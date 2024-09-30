@@ -34,7 +34,7 @@ public class JwtTokenProvider {
 
     // application.yml에서 secret 값 가져와서 key에 저장
     public JwtTokenProvider(
-            @Value("${jwt.secret}") String secretKey,
+            @Value("${spring.jwt.secret}") String secretKey,
             RedisUtils redisUtils,
             CustomUserDetailsService customUserDetailsService,
             @Value("${spring.jwt.expirationMs}") Long expirationMs,
