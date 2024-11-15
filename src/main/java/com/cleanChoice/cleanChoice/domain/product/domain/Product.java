@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Builder(access = AccessLevel.PROTECTED)
@@ -13,6 +14,20 @@ import java.util.List;
 @Entity
 @Table(name = "product")
 public class Product extends BaseEntity {
+
+    // dsld_id
+    @Column(name = "dsld_id", nullable = true)
+    private Long dsldId;
+
+    // dsld 제품 상세 페이지 URL
+    @Column(name = "dsld_url", nullable = true)
+    private String dsldUrl;
+
+    // 각 마켓 제품 상세 페이지 URL
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "market_url", nullable = false)
+    private Set<String> marketUrlList;
 
     // 제품 영어명
     @Column(name = "english_name", nullable = true)
