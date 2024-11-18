@@ -65,6 +65,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 dump.rdb
+gradle/*
 
 ### NetBeans ###
 /nbproject/private/
