@@ -20,7 +20,6 @@ public class ShopBasket extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "shopBasket", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-    @JoinColumn(name = "shop_basket_id")
     private List<ShopBasketProductJoin> shopBasketProductJoinList;
 
 
