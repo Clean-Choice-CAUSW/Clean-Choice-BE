@@ -6,12 +6,14 @@ import com.cleanChoice.cleanChoice.domain.member.dto.JwtToken;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignInRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
+import com.cleanChoice.cleanChoice.domain.member.dto.request.UpdateMemberRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.global.config.jwt.JwtTokenProvider;
 import com.cleanChoice.cleanChoice.global.config.redis.RedisUtils;
 import com.cleanChoice.cleanChoice.global.dtoMapper.MemberDtoMapper;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -129,5 +131,18 @@ public class MemberService {
 
     public MemberResponseDto getCurrentMember(Member member) {
         return this.toResponseDto(member);
+    }
+
+    @Transactional
+    public MemberResponseDto updateMember(Member member, UpdateMemberRequestDto updateMemberRequestDto) {
+        member.updateMember(
+                updateMemberRequestDto.getPassword() == null ? member.getPassword() : passwordEncoder.encode(updateMemberRequestDto.getPassword()),
+                updateMemberRequestDto.getName() == null ? member.getName() : updateMemberRequestDto.getName(),
+                updateMemberRequestDto.getAge() == null ? member.getAge() : updateMemberRequestDto.getAge(),
+                updateMemberRequestDto.getGender() == null ? member.getGender() : updateMemberRequestDto.getGender(),
+                updateMemberRequestDto.getIsPregnant() == null ? member.getIsPregnant() : updateMemberRequestDto.getIsPregnant()
+        );
+
+        return toResponseDto(memberRepository.save(member));
     }
 }

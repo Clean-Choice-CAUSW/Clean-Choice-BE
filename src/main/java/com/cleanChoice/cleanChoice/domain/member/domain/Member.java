@@ -61,4 +61,18 @@ public class Member extends BaseEntity {
                 .build();
     }
 
+    public void updateMember(
+            String password,
+            String name,
+            Integer age,
+            Gender gender,
+            Boolean isPregnant
+    ) {
+        this.password = password;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.isPregnant = isPregnant;
+    }
+
 }

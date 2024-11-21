@@ -5,6 +5,7 @@ import com.cleanChoice.cleanChoice.domain.member.dto.JwtToken;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignInRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
+import com.cleanChoice.cleanChoice.domain.member.dto.request.UpdateMemberRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,6 +83,16 @@ public class MemberController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
         return memberService.getCurrentMember(customUserDetails.getMember());
+    }
+
+    @PutMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정합니다.")
+    public MemberResponseDto updateMember(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto
+    ) {
+        return memberService.updateMember(customUserDetails.getMember(), updateMemberRequestDto);
     }
 
 }
