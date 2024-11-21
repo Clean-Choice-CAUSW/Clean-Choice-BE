@@ -1,6 +1,7 @@
 package com.cleanChoice.cleanChoice.domain.member.domain;
 
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
+import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasket;
 import com.cleanChoice.cleanChoice.domain.shopRecord.domain.ShopRecord;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
@@ -49,15 +50,14 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private List<IntakeIngredient> intakeIngredientList;
 
-    public static Member of(
-            String loginId,
-            String encodedPassword,
-            String name
-    ) {
+    public static Member from(SignUpRequestDto signUpRequestDto, String encodedPassword) {
         return Member.builder()
-                .loginId(loginId)
+                .loginId(signUpRequestDto.getLoginId())
                 .password(encodedPassword)
-                .name(name)
+                .name(signUpRequestDto.getName())
+                .age(signUpRequestDto.getAge())
+                .gender(signUpRequestDto.getGender())
+                .isPregnant(signUpRequestDto.getIsPregnant())
                 .build();
     }
 

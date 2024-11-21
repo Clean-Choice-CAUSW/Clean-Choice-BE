@@ -5,6 +5,7 @@ import com.cleanChoice.cleanChoice.domain.member.domain.repository.MemberReposit
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,14 +22,25 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new CustomUserDetails(member);
+        return CustomUserDetails.builder()
+                .member(member)
+                .build();
+    }
+
+    private UserDetails createUserDetails(Member member) {
+        return User.builder()
+                .username(member.getLoginId())
+                .password(member.getPassword())
+                .build();
     }
 
     public UserDetails loadUserByUserId(Long userId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "User not found"));
 
-        return new CustomUserDetails(member);
+        return CustomUserDetails.builder()
+                .member(member)
+                .build();
     }
 
 }

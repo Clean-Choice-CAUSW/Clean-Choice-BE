@@ -49,20 +49,24 @@ public class JwtTokenProvider {
     }
 
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
-    public JwtToken generateToken(Authentication authentication) {
+    public JwtToken generateToken(Long userPk) {
         // 권한 가져오기
+        /*
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+         */
+
+        Claims claims = Jwts.claims().setSubject(userPk.toString());
         long now = (new Date()).getTime();
 
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + expirationMs);
         String accessToken = Jwts.builder()
                 .setIssuedAt(new Date(now))
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
+                .setClaims(claims)
+                //.claim("auth", authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
@@ -111,17 +115,19 @@ public class JwtTokenProvider {
 
          */
 
-        String userPk = getUserPk(accessToken);
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(userPk);
+        Long userPk = Long.parseLong(getUserPk(accessToken));
+        UserDetails userDetails = customUserDetailsService.loadUserByUserId(userPk);
 
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     public String getUserPk(String accessToken) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
+                .build()
                 .parseClaimsJws(accessToken)
-                .getBody().getSubject();
+                .getBody()
+                .getSubject();
     }
 
     public String resolveToken(HttpServletRequest request) {

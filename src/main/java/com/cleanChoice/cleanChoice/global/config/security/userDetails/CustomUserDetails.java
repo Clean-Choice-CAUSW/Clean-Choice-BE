@@ -4,12 +4,15 @@ import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
@@ -27,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getName();
+        return member.getLoginId();
     }
 
     public Long getUserId(){

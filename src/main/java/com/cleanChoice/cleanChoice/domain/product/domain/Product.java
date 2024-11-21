@@ -30,12 +30,8 @@ public class Product extends BaseEntity {
     private Set<String> marketUrlList;
 
     // 제품 영어명
-    @Column(name = "english_name", nullable = true)
-    private String englishName;
-
-    // 제품 한글명
-    @Column(name = "korean_name", nullable = true)
-    private String koreanName;
+    @Column(name = "name", nullable = true)
+    private String name;
 
     // 유효 성분 리스트
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -44,6 +40,9 @@ public class Product extends BaseEntity {
     // 제조사명 (ex: Vitamin World)
     @Column(name = "brand_name", nullable = true)
     private String brandName;
+
+    @Column(name = "made_in_country", nullable = false)
+    private String madeInCountry;
 
     // 제품 총량 (ex: 100 Easy To Swallow Coated Tablet(s))
     @Column(name = "english_net_content", nullable = true)
@@ -87,7 +86,6 @@ public class Product extends BaseEntity {
     // 라벨 문구
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductLabelStatement> productLabelStatementList;
-
 
     public static Product of() {
         return Product.builder()

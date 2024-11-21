@@ -1,6 +1,7 @@
 package com.cleanChoice.cleanChoice.global.config.redis;
 
 
+import com.cleanChoice.cleanChoice.global.util.StaticValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,9 +29,9 @@ public class RedisUtils {
      * Key: Blacklist:{AccessToken 값}
      * Value: "BLACKLISTED"
      */
-    public void setRefreshTokenData(String key, Long userId, Long expiredTime){
+    public void setRefreshTokenData(String key, Long userId){
         String redisKey = "RefreshToken:" + key;
-        redisTemplate.opsForValue().set(redisKey, userId, expiredTime, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(redisKey, userId, StaticValue.JWT_REFRESH_TOKEN_VALID_TIME, TimeUnit.MILLISECONDS);
     }
 
     public Long getRefreshTokenData(String key){

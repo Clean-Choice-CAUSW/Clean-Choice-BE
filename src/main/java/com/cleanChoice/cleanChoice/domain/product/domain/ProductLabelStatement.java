@@ -16,10 +16,12 @@ public class ProductLabelStatement extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    // ex: Precautions
     @Enumerated(EnumType.STRING)
     @Column(name = "statement_type", nullable = false)
     private StatementType statementType;
 
+    // ex: WARNING: If you are pregnant, nursing or taking any medications, consult your doctor before use. Discontinue use and consult your doctor if any adverse reactions occur. Keep out of reach of children. Store in a cool, dry place. Do not use if seal under cap is broken or missing.
     @Column(name = "statement", nullable = false)
     private String statement;
 

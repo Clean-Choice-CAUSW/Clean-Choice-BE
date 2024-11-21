@@ -3,6 +3,7 @@ package com.cleanChoice.cleanChoice.global.exceptions;
 import lombok.*;
 
 @Getter
+@Setter
 @Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

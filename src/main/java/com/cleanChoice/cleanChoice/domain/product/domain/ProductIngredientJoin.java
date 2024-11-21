@@ -21,29 +21,32 @@ public class ProductIngredientJoin extends BaseEntity {
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
-    // 1회 복용양
+    // 1회 복용양(ex: 1)
     @Column(name = "serving_size", nullable = true)
     private Double servingSize;
 
-    // 1회 복용양 단위
+    // 1회 복용양 단위(ex: Tablet(s))
     @Column(name = "serving_unit", nullable = true)
     private String servingUnit;
 
-    // 복용 당 성분 섭취량
+    // 복용 당 성분 섭취량(ex: 1000)
     @Column(name = "amount_per_serving", nullable = true)
     private Double amountPerServing;
 
-    // 복용 당 성분 섭취량 단위
+    // 복용 당 성분 섭취량 단위(ex: mg)
     @Column(name = "amount_per_serving_unit", nullable = true)
     private String amountPerServingUnit;
 
-    // 일일 권장 섭취량 대비 비율(%)
+    // 일일 권장 섭취량 대비 비율(%, ex: 5882)
     @Column(name = "daily_value_per_serving", nullable = true)
     private Double dailyValuePerServing;
 
-    // 일일 권장 섭취량 기준 그룹
+    // 일일 권장 섭취량 기준 그룹(ex: Adults and children 4 or more years of age)
     @Column(name = "daily_value_target_group", nullable = true)
-    private String dailyValueTargetGroup;
+    private String englishDailyValueTargetGroup;
+
+    @Column(name = "korean_daily_value_target_group", nullable = true)
+    private String koreanDailyValueTargetGroup;
 
     public static ProductIngredientJoin of() {
         return ProductIngredientJoin.builder()
