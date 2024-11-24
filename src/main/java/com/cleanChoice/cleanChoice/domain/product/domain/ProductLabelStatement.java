@@ -22,7 +22,10 @@ public class ProductLabelStatement extends BaseEntity {
     private StatementType statementType;
 
     // ex: WARNING: If you are pregnant, nursing or taking any medications, consult your doctor before use. Discontinue use and consult your doctor if any adverse reactions occur. Keep out of reach of children. Store in a cool, dry place. Do not use if seal under cap is broken or missing.
-    @Column(name = "statement", nullable = false)
-    private String statement;
+    @Column(name = "english_statement", nullable = false)
+    private String englishStatement;
+
+    @Column(name = "korean_statement", nullable = false)
+    private String koreanStatement;
 
 }

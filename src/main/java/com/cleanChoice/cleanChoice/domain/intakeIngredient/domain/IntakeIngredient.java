@@ -22,6 +22,12 @@ public class IntakeIngredient extends BaseEntity {
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
+    @Column(name = "amount", nullable = true)
+    private Double amount;
+
+    @Column(name = "unit", nullable = true)
+    private String unit;
+
     public static IntakeIngredient of(Member member, Ingredient ingredient) {
         return IntakeIngredient.builder()
                 .member(member)

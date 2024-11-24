@@ -23,11 +23,9 @@ public class Product extends BaseEntity {
     @Column(name = "dsld_url", nullable = true)
     private String dsldUrl;
 
-    // 각 마켓 제품 상세 페이지 URL
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "market_url", nullable = false)
-    private Set<String> marketUrlList;
+    // 각 마켓 제품 상세 페이지 URL 및 가격 리스트
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductMarket> productMarketList;
 
     // 제품 영어명
     @Column(name = "name", nullable = true)
@@ -41,6 +39,7 @@ public class Product extends BaseEntity {
     @Column(name = "brand_name", nullable = true)
     private String brandName;
 
+    // 제조국(한글)
     @Column(name = "made_in_country", nullable = false)
     private String madeInCountry;
 

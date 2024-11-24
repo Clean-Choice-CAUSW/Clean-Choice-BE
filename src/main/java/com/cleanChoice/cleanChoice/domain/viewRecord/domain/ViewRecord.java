@@ -2,6 +2,7 @@ package com.cleanChoice.cleanChoice.domain.viewRecord.domain;
 
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.product.domain.Product;
+import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,8 +20,8 @@ public class ViewRecord extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_market_id", nullable = false)
+    private ProductMarket productMarket;
 
     public static ViewRecord of() {
         return ViewRecord.builder()

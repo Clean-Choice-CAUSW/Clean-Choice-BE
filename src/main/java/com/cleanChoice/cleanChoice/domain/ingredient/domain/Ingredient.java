@@ -14,8 +14,11 @@ import lombok.*;
 @Table(name = "ingredient")
 public class Ingredient extends BaseEntity {
 
-    @Column(name = "category", nullable = true)
-    private String category;
+    @Column(name = "english_category", nullable = true)
+    private String englishCategory;
+
+    @Column(name = "korean_category", nullable = true)
+    private String koreanCategory;
 
     @Setter(value = AccessLevel.PUBLIC)
     @Column(name = "name", nullable = true)
@@ -24,6 +27,8 @@ public class Ingredient extends BaseEntity {
     @Setter(value = AccessLevel.PUBLIC)
     @Column(name = "korean_name", nullable = true)
     private String koreanName;
+
+    // TODO: 성분 별 주의 사항 관련 특성 제작 필요
 
     public static Ingredient of(String englishName, String koreanName) {
         return Ingredient.builder()
