@@ -3,9 +3,11 @@ package com.cleanChoice.cleanChoice.domain.product.domain;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Array;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Builder(access = AccessLevel.PROTECTED)
@@ -31,6 +33,11 @@ public class Product extends BaseEntity {
     @Column(name = "name", nullable = true)
     private String name;
 
+    @Column(name = "name_vector")
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Array(length = 3072) // dimensions
+    private float[] nameVector;
+
     // 유효 성분 리스트
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductIngredientJoin> productIngredientJoinList;
@@ -38,6 +45,11 @@ public class Product extends BaseEntity {
     // 제조사명 (ex: Vitamin World)
     @Column(name = "brand_name", nullable = true)
     private String brandName;
+
+    @Column(name = "brand_name_vector")
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Array(length = 3072) // dimensions
+    private float[] brandNameVector;
 
     // 제조국(한글)
     @Column(name = "made_in_country", nullable = false)

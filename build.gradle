@@ -32,7 +32,21 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// PostgreSQL Vector Type
+	//runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.postgresql:postgresql:42.6.0'
+
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-62:3.5.3'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2'
+
+	// PGVector
+	implementation "org.hibernate.orm:hibernate-core:6.5.2.Final"
+	implementation 'org.hibernate.orm:hibernate-vector:6.4.0.Final'
+	//implementation 'ai.pgvector:pgvector-java:0.8.0'
+
+	// Spring AI
+	//implementation 'org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -54,7 +68,7 @@ dependencies {
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
 	// h2 database(테스트용)
-	runtimeOnly 'com.h2database:h2'
+	//runtimeOnly 'com.h2database:h2'
 
 	// annotation config
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

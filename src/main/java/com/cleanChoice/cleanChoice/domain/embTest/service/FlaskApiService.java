@@ -1,0 +1,89 @@
+package com.cleanChoice.cleanChoice.domain.embTest.service;
+
+import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbRequestDto;
+import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Service
+public class FlaskApiService {
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    public Map<String, List<Float>> getEmbeddingVectors(String productName, String brandName) {
+        String url = "http://localhost:15000/embed"; // Flask 서버 URL
+
+        // 요청 데이터 생성
+        Map<String, String> requestBody = Map.of(
+                "productName", productName,
+                "brandName", brandName
+        );
+
+        // HTTP 헤더 설정 (JSON 형식)
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        // 요청 생성
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        // Flask API 호출
+        ResponseEntity<Map> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                Map.class
+        );
+
+        // 응답 처리
+        Map<String, Object> rawResponse = response.getBody();
+        if (rawResponse == null) {
+            throw new RuntimeException("Empty response from Flask API");
+        }
+
+        // 응답 데이터를 Map<String, List<Float>>로 변환
+        return rawResponse.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            if (!(entry.getValue() instanceof List)) {
+                                throw new RuntimeException("Invalid response format");
+                            }
+                            return (List<Float>) entry.getValue(); // 형변환
+                        }
+                ));
+    }
+
+    public List<EmbResponseDto> getEmbeddingVectorList(List<EmbRequestDto> embRequestDtoList) {
+        String url = "http://localhost:15000/embed"; // Flask 서버 URL
+
+        // HTTP 헤더 설정 (JSON 형식)
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        // 요청 데이터와 헤더 생성
+        HttpEntity<List<EmbRequestDto>> requestEntity = new HttpEntity<>(embRequestDtoList, headers);
+
+        // Flask API 호출
+        ResponseEntity<EmbResponseDto[]> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                EmbResponseDto[].class // 응답 형식을 배열로 처리
+        );
+
+        // 배열을 List로 변환하여 반환
+        return Arrays.asList(response.getBody());
+    }
+
+}
