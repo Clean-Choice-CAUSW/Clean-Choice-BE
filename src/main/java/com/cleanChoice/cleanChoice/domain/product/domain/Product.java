@@ -35,7 +35,7 @@ public class Product extends BaseEntity {
 
     @Column(name = "name_vector")
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 3072) // dimensions
+    @Array(length = 384) // MiniLM-L6-v2 dimensions
     private float[] nameVector;
 
     // 유효 성분 리스트
@@ -48,7 +48,7 @@ public class Product extends BaseEntity {
 
     @Column(name = "brand_name_vector")
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 3072) // dimensions
+    @Array(length = 384) // MiniLM-L6-v2 dimensions
     private float[] brandNameVector;
 
     // 제조국(한글)

@@ -29,7 +29,7 @@ public class ProductResponseDto {
     private List<ProductIngredientJoinResponseDto> productIngredientJoinResponseDtoList;
 
     @Schema(description = "제조사명 (ex: Vitamin World)")
-    private String branchName;
+    private String brandName;
 
     @Schema(description = "제조 국가")
     private String madeInCountry;

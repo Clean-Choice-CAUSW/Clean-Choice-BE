@@ -10,7 +10,7 @@ import com.cleanChoice.cleanChoice.domain.member.dto.request.UpdateMemberRequest
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.global.config.jwt.JwtTokenProvider;
 import com.cleanChoice.cleanChoice.global.config.redis.RedisUtils;
-import com.cleanChoice.cleanChoice.global.dtoMapper.MemberDtoMapper;
+import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapper;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -143,7 +143,7 @@ public class MemberService {
     }
 
     private MemberResponseDto toResponseDto(Member member) {
-        return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
+        return DtoMapper.INSTANCE.toMemberResponseDto(member);
     }
 
 }

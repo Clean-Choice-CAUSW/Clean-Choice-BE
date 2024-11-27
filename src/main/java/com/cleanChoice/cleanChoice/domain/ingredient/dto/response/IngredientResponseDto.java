@@ -40,7 +40,7 @@ public class IngredientResponseDto {
     @Schema(description = "조합 금지 정보 Dto 리스트(없을 시 빈 리스트)")
     private List<CombineUseBanedIngredientInfoResponseDto> combineUseBanedIngredientInfoResponseDtoList;
 
-    private LocalDateTime localDateTime;
+    private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
