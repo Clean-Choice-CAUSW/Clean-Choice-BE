@@ -1,11 +1,11 @@
-package com.cleanChoice.cleanChoice.domain.member.dto;
+package com.cleanChoice.cleanChoice.domain.member.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class JwtToken {
+public class JwtTokenResponseDto {
 
     private String grantType;
 

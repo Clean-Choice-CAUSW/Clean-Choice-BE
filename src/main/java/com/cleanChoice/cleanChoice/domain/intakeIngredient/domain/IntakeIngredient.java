@@ -3,6 +3,7 @@ package com.cleanChoice.cleanChoice.domain.intakeIngredient.domain;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,11 @@ public class IntakeIngredient extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_id", nullable = false)
+    @JoinColumn(name = "ingredient_id", nullable = true)
     private Ingredient ingredient;
+
+    @Column(name = "fake_name", nullable = true)
+    private String fakeName;
 
     @Column(name = "amount", nullable = true)
     private Double amount;

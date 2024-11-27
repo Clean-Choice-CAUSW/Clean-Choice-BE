@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +27,18 @@ public class IngredientResponseDto {
 
     @Schema(description = "Ingredient 이름 / 한글", example = "비타민 A")
     private String koreanName;
+
+    @Schema(description = "Ingredient 효능", example = "피부건강에 좋음.")
+    private String effectiveness;
+
+    @Schema(description = "통관 금지 여부", example = "false")
+    private Boolean isClearanceBaned;
+
+    @Schema(description = "금지/주의 정보 Dto 리스트(없을 시 빈 리스트)")
+    private List<BanedIngredientInfoResponseDto> banedIngredientInfoResponseDtoList;
+
+    @Schema(description = "조합 금지 정보 Dto 리스트(없을 시 빈 리스트)")
+    private List<CombineUseBanedIngredientInfoResponseDto> combineUseBanedIngredientInfoResponseDtoList;
 
     private LocalDateTime localDateTime;
 

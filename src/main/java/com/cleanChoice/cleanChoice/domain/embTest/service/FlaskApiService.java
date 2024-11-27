@@ -3,6 +3,7 @@ package com.cleanChoice.cleanChoice.domain.embTest.service;
 import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbRequestDto;
 import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,10 @@ public class FlaskApiService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public Map<String, List<Float>> getEmbeddingVectors(String productName, String brandName) {
-        String url = "http://localhost:15000/embed"; // Flask 서버 URL
+    @Value("${flask.url}")
+    private String flaskUrl;
 
+    public Map<String, List<Float>> getEmbeddingVectors(String productName, String brandName) {
         // 요청 데이터 생성
         Map<String, String> requestBody = Map.of(
                 "productName", productName,
@@ -39,7 +41,7 @@ public class FlaskApiService {
 
         // Flask API 호출
         ResponseEntity<Map> response = restTemplate.exchange(
-                url,
+                flaskUrl,
                 HttpMethod.POST,
                 requestEntity,
                 Map.class
@@ -65,8 +67,6 @@ public class FlaskApiService {
     }
 
     public List<EmbResponseDto> getEmbeddingVectorList(List<EmbRequestDto> embRequestDtoList) {
-        String url = "http://localhost:15000/embed"; // Flask 서버 URL
-
         // HTTP 헤더 설정 (JSON 형식)
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -76,7 +76,7 @@ public class FlaskApiService {
 
         // Flask API 호출
         ResponseEntity<EmbResponseDto[]> response = restTemplate.exchange(
-                url,
+                flaskUrl,
                 HttpMethod.POST,
                 requestEntity,
                 EmbResponseDto[].class // 응답 형식을 배열로 처리

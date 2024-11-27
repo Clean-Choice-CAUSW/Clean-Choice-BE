@@ -14,7 +14,9 @@ public interface EmbTestRepository extends JpaRepository<EmbTest, Long> {
             "(name_vector <=> CAST(:target_name_vector AS vector)) AS name_distance, " +
             "(brand_name_vector <=> CAST(:target_brand_name_vector AS vector)) AS brand_name_distance " +
             "FROM emb_test " +
-            "ORDER BY name_distance + brand_name_distance ASC",
+            "WHERE (brand_name_vector <=> CAST(:target_brand_name_vector AS vector)) <= 0.5 " +
+            "ORDER BY name_distance ASC " +
+            "LIMIT 100",
             nativeQuery = true)
     List<EmbTest> findAllCos(
             @Param("target_name_vector") String target_name_vector, // 이름 정확히 일치

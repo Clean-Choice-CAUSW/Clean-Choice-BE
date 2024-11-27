@@ -1,10 +1,10 @@
 package com.cleanChoice.cleanChoice.domain.ingredient.domain;
 
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Builder(access = AccessLevel.PROTECTED)
@@ -28,7 +28,17 @@ public class Ingredient extends BaseEntity {
     @Column(name = "korean_name", nullable = true)
     private String koreanName;
 
-    // TODO: 성분 별 주의 사항 관련 특성 제작 필요
+    // 효능
+    @Column(name = "effectiveness", nullable = true)
+    private String effectiveness;
+
+    // 통관 금지 여부
+    @Column(name = "is_clearance_baned", nullable = false)
+    @Builder.Default
+    private Boolean isClearanceBaned = false;
+
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    private List<BanedIngredientInfo> banedIngredientInfoList;
 
     public static Ingredient of(String englishName, String koreanName) {
         return Ingredient.builder()

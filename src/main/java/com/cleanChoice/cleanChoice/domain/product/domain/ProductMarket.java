@@ -22,11 +22,23 @@ public class ProductMarket extends BaseEntity {
     @Column(name = "market_name", nullable = false)
     private String url;
 
-    @Column(name = "price", nullable = true)
+    @Column(name = "price", nullable = false)
     private Long price;
 
-    @Column(name = "price_unit", nullable = true)
+    @Column(name = "price_unit", nullable = false)
     private String priceUnit;
+
+    @Column(name = "price_discount", nullable = false)
+    @Builder.Default
+    private Long viewCount = 1L;
+
+    @Column(name = "view_count", nullable = false)
+    @Builder.Default
+    private Long mismatchCount = 0L;
+
+    @Column(name = "is_trained", nullable = false)
+    @Builder.Default
+    private Boolean isTrained = false;
 
 
 }

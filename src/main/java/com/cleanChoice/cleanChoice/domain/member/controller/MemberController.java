@@ -1,7 +1,7 @@
-package com.cleanChoice.cleanChoice.domain.member.presentation;
+package com.cleanChoice.cleanChoice.domain.member.controller;
 
-import com.cleanChoice.cleanChoice.domain.member.application.MemberService;
-import com.cleanChoice.cleanChoice.domain.member.dto.JwtToken;
+import com.cleanChoice.cleanChoice.domain.member.service.MemberService;
+import com.cleanChoice.cleanChoice.domain.member.dto.response.JwtTokenResponseDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignInRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
@@ -34,7 +34,7 @@ public class MemberController {
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "로그인", description = "로그인을 합니다.")
-    public JwtToken signIn(
+    public JwtTokenResponseDto signIn(
             @RequestBody @Valid SignInRequestDto signInRequestDto
     ) {
         return memberService.signIn(signInRequestDto);
@@ -52,7 +52,7 @@ public class MemberController {
     @PostMapping("/update-token")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "토큰 갱신", description = "토큰을 갱신합니다.")
-    public JwtToken updateToken(
+    public JwtTokenResponseDto updateToken(
             @RequestBody @Valid String refreshToken
     ) {
         return memberService.updateToken(refreshToken);
@@ -76,10 +76,10 @@ public class MemberController {
         memberService.deleteMember(customUserDetails.getMember());
     }
 
-    @GetMapping("/test")
+    @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "테스트", description = "테스트를 합니다.")
-    public MemberResponseDto test(
+    @Operation(summary = "현재 로그인 회원 조회", description = "현재 로그인한 회원을 조회합니다.")
+    public MemberResponseDto getCurrentMember(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
         return memberService.getCurrentMember(customUserDetails.getMember());

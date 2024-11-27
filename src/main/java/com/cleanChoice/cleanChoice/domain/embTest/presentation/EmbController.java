@@ -19,6 +19,7 @@ public class EmbController {
 
     private final EmbService embService;
 
+    /*
     @PostMapping("/create-list")
     public void createEmbList(
             @RequestBody List<EmbRequestDto> embRequestDtoList
@@ -33,5 +34,7 @@ public class EmbController {
     ) {
         return embService.analyze(embRequestDto);
     }
+
+     */
 
 }

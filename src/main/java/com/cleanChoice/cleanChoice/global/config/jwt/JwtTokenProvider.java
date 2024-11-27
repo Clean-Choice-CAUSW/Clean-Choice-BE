@@ -1,6 +1,6 @@
 package com.cleanChoice.cleanChoice.global.config.jwt;
 
-import com.cleanChoice.cleanChoice.domain.member.dto.JwtToken;
+import com.cleanChoice.cleanChoice.domain.member.dto.response.JwtTokenResponseDto;
 import com.cleanChoice.cleanChoice.global.config.redis.RedisUtils;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetailsService;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
@@ -13,13 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -49,7 +47,7 @@ public class JwtTokenProvider {
     }
 
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
-    public JwtToken generateToken(Long userPk) {
+    public JwtTokenResponseDto generateToken(Long userPk) {
         // 권한 가져오기
         /*
         String authorities = authentication.getAuthorities().stream()
@@ -77,7 +75,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
 
-        return JwtToken.builder()
+        return JwtTokenResponseDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

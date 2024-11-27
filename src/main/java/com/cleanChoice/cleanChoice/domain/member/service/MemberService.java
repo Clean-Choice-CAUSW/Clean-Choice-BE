@@ -1,8 +1,8 @@
-package com.cleanChoice.cleanChoice.domain.member.application;
+package com.cleanChoice.cleanChoice.domain.member.service;
 
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.domain.repository.MemberRepository;
-import com.cleanChoice.cleanChoice.domain.member.dto.JwtToken;
+import com.cleanChoice.cleanChoice.domain.member.dto.response.JwtTokenResponseDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignInRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
@@ -13,7 +13,6 @@ import com.cleanChoice.cleanChoice.global.config.redis.RedisUtils;
 import com.cleanChoice.cleanChoice.global.dtoMapper.MemberDtoMapper;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,7 +50,7 @@ public class MemberService {
         return this.toResponseDto(member);
     }
 
-    public JwtToken signIn(SignInRequestDto signInRequestDto) {
+    public JwtTokenResponseDto signIn(SignInRequestDto signInRequestDto) {
         Member member = memberRepository.findByLoginId(signInRequestDto.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
@@ -60,8 +59,6 @@ public class MemberService {
                 member.getPassword()
         );
 
-        //Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
         if (!passwordEncoder.matches(signInRequestDto.getPassword(), member.getPassword())) {
             throw new BadRequestException(
                     ErrorCode.INVALID_SIGNIN,
@@ -69,14 +66,14 @@ public class MemberService {
             );
         }
 
-        JwtToken jwtToken = jwtTokenProvider.generateToken(member.getId());
+        JwtTokenResponseDto jwtTokenResponseDto = jwtTokenProvider.generateToken(member.getId());
 
-        redisUtils.setRefreshTokenData(jwtToken.getRefreshToken(), member.getId());
+        redisUtils.setRefreshTokenData(jwtTokenResponseDto.getRefreshToken(), member.getId());
 
-        return jwtToken;
+        return jwtTokenResponseDto;
     }
 
-    public JwtToken updateToken(String refreshToken) {
+    public JwtTokenResponseDto updateToken(String refreshToken) {
         Member member = memberRepository.findById(getMemberIdFromRefreshToken(refreshToken))
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
@@ -85,13 +82,13 @@ public class MemberService {
                 null
         );
 
-        JwtToken newJwtToken = jwtTokenProvider.generateToken(member.getId());
+        JwtTokenResponseDto newJwtTokenResponseDto = jwtTokenProvider.generateToken(member.getId());
 
-        redisUtils.setRefreshTokenData(newJwtToken.getRefreshToken(), member.getId());
+        redisUtils.setRefreshTokenData(newJwtTokenResponseDto.getRefreshToken(), member.getId());
 
         redisUtils.deleteRefreshTokenData(refreshToken);
 
-        return newJwtToken;
+        return newJwtTokenResponseDto;
     }
 
     public void signOut(SignoutRequestDto signoutRequestDto) {
@@ -117,18 +114,6 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    private Long getMemberIdFromRefreshToken(String refreshToken) {
-        return Optional.ofNullable(redisUtils.getRefreshTokenData(refreshToken))
-                .orElseThrow(() -> new BadRequestException(
-                        ErrorCode.ROW_DOES_NOT_EXIST,
-                        "해당하는 refreshToken에 맵핑된 사용자가 없습니다."
-                ));
-    }
-
-    private MemberResponseDto toResponseDto(Member member) {
-        return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
-    }
-
     public MemberResponseDto getCurrentMember(Member member) {
         return this.toResponseDto(member);
     }
@@ -145,4 +130,20 @@ public class MemberService {
 
         return toResponseDto(memberRepository.save(member));
     }
+
+
+    // private method
+
+    private Long getMemberIdFromRefreshToken(String refreshToken) {
+        return Optional.ofNullable(redisUtils.getRefreshTokenData(refreshToken))
+                .orElseThrow(() -> new BadRequestException(
+                        ErrorCode.ROW_DOES_NOT_EXIST,
+                        "해당하는 refreshToken에 맵핑된 사용자가 없습니다."
+                ));
+    }
+
+    private MemberResponseDto toResponseDto(Member member) {
+        return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
+    }
+
 }

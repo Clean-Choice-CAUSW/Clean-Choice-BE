@@ -6,12 +6,14 @@ import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
 import com.cleanChoice.cleanChoice.domain.embTest.domain.EmbTest;
 import com.cleanChoice.cleanChoice.domain.embTest.domain.EmbTestRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmbService {
@@ -57,7 +59,7 @@ public class EmbService {
                 analysisResult.getBrandNameVectorList().toString()
         );
 
-        return embTestList
+        List<AnalyzeResponseDto> analyzeResponseDtoList = embTestList
                 .stream()
                 .map(embTest -> {
                     List<Float> nameVectorList = new ArrayList<>();
@@ -78,6 +80,8 @@ public class EmbService {
                             .build();
                         }
                 ).toList();
+
+        return analyzeResponseDtoList;
     }
 
 
