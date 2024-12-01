@@ -1,7 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.viewRecord.domain;
 
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
-import com.cleanChoice.cleanChoice.domain.product.domain.Product;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -23,8 +22,10 @@ public class ViewRecord extends BaseEntity {
     @JoinColumn(name = "product_market_id", nullable = false)
     private ProductMarket productMarket;
 
-    public static ViewRecord of() {
+    public static ViewRecord of(Member member, ProductMarket productMarket) {
         return ViewRecord.builder()
+                .member(member)
+                .productMarket(productMarket)
                 .build();
     }
 

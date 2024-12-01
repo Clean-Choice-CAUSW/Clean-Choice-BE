@@ -2,18 +2,17 @@ package com.cleanChoice.cleanChoice.domain.product.domain;
 
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Array;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.List;
+
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "name_brand_name_vector")
 public class NameBrandNameVector extends BaseEntity {
@@ -35,5 +34,36 @@ public class NameBrandNameVector extends BaseEntity {
     @JdbcTypeCode(SqlTypes.VECTOR)
     @Array(length = 384) // MiniLM-L6-v2 dimensions
     private float[] brandNameVector;
+
+    public static NameBrandNameVector createWithProductMarket(
+            Product product,
+            List<Float> nameVector,
+            List<Float> brandNameVector
+    ) {
+        return NameBrandNameVector.builder()
+                .product(product)
+                .nameVector(convertListToFloatArray(nameVector))
+                .brandNameVector(convertListToFloatArray(brandNameVector))
+                .build();
+    }
+
+    public static NameBrandNameVector createWithProductMarket(
+            ProductMarket productMarket,
+            List<Float> nameVector,
+            List<Float> brandNameVector
+    ) {
+        return NameBrandNameVector.builder()
+                .productMarket(productMarket)
+                .nameVector(convertListToFloatArray(nameVector))
+                .brandNameVector(convertListToFloatArray(brandNameVector))
+                .build();
+    }
+
+    private static float[] convertListToFloatArray(List<Float> list) {
+        float[] array = new float[list.size()];
+        for (int i = 0; i < list.size(); i++)
+            array[i] = list.get(i);
+        return array;
+    }
 
 }

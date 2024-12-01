@@ -2,6 +2,8 @@ package com.cleanChoice.cleanChoice.domain.embTest.service;
 
 import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbRequestDto;
 import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
+import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
+import com.cleanChoice.cleanChoice.global.exceptions.InternalServerException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -83,7 +85,23 @@ public class FlaskApiService {
         );
 
         // 배열을 List로 변환하여 반환
+        if (response.getBody() == null) {
+            throw new InternalServerException(ErrorCode.INTERNAL_SERVER, "Empty response from Flask API");
+        }
+
         return Arrays.asList(response.getBody());
+    }
+
+    public EmbResponseDto getEmbeddingVector(String productName, String brandName) {
+        EmbRequestDto embRequestDto = EmbRequestDto.builder()
+                .productName(productName)
+                .brandName(brandName)
+                .build();
+        EmbResponseDto embResponseDto = getEmbeddingVectorList(List.of(embRequestDto)).get(0);
+        if (embResponseDto == null) {
+            throw new InternalServerException(ErrorCode.INTERNAL_SERVER, "Empty response from Flask API");
+        }
+        return embResponseDto;
     }
 
 }
