@@ -15,11 +15,14 @@ indexes = {
 })
 public class ProductMarket extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST })
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "market_name", nullable = false)
+    @Column(name = "image_url", nullable = true, columnDefinition = "TEXT")
+    private String imageUrl;
+
+    @Column(name = "market_name", nullable = false, columnDefinition = "TEXT")
     private String url;
 
     @Column(name = "price", nullable = false)
@@ -40,5 +43,24 @@ public class ProductMarket extends BaseEntity {
     @Builder.Default
     private Boolean isTrained = false;
 
+    public static ProductMarket of(
+            Product product,
+            String imageUrl,
+            String url,
+            Long price,
+            String priceUnit
+    ) {
+        return ProductMarket.builder()
+                .product(product)
+                .imageUrl(imageUrl)
+                .url(url)
+                .price(price)
+                .priceUnit(priceUnit)
+                .build();
+    }
+
+    public void updateViewCount() {
+        this.viewCount++;
+    }
 
 }

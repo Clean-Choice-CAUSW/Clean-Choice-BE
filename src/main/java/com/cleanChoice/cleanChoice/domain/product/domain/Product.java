@@ -3,10 +3,8 @@ package com.cleanChoice.cleanChoice.domain.product.domain;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Array;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,30 +24,22 @@ public class Product extends BaseEntity {
     private String dsldUrl;
 
     // 각 마켓 제품 상세 페이지 URL 및 가격 리스트
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<ProductMarket> productMarketList;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @Builder.Default
+    private List<ProductMarket> productMarketList = new ArrayList<>();
 
     // 제품 영어명
     @Column(name = "name", nullable = true)
     private String name;
 
-    @Column(name = "name_vector")
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 384) // MiniLM-L6-v2 dimensions
-    private float[] nameVector;
-
     // 유효 성분 리스트
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<ProductIngredientJoin> productIngredientJoinList;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @Builder.Default
+    private List<ProductIngredientJoin> productIngredientJoinList = new ArrayList<>();
 
     // 제조사명 (ex: Vitamin World)
     @Column(name = "brand_name", nullable = true)
     private String brandName;
-
-    @Column(name = "brand_name_vector")
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 384) // MiniLM-L6-v2 dimensions
-    private float[] brandNameVector;
 
     // 제조국(한글)
     @Column(name = "made_in_country", nullable = false)
@@ -95,12 +85,91 @@ public class Product extends BaseEntity {
     private String koreanOtherIngredients;
 
     // 라벨 문구
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<ProductLabelStatement> productLabelStatementList;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @Builder.Default
+    private List<ProductLabelStatement> productLabelStatementList = new ArrayList<>();
 
-    public static Product of() {
+    public static Product of(
+            Long dsldId,
+            String dsldUrl,
+            String name,
+            String brandName,
+            String madeInCountry,
+            String englishNetContent,
+            String koreanNetContent,
+            String servingSize,
+            String englishProductType,
+            String koreanProductType,
+            String englishSupplementForm,
+            String koreanSupplementForm,
+            String englishSuggestedUse,
+            String koreanSuggestedUse,
+            String englishOtherIngredients,
+            String koreanOtherIngredients
+    ) {
         return Product.builder()
+                .dsldId(dsldId)
+                .dsldUrl(dsldUrl)
+                .name(name)
+                .brandName(brandName)
+                .madeInCountry(madeInCountry)
+                .englishNetContent(englishNetContent)
+                .koreanNetContent(koreanNetContent)
+                .servingSize(servingSize)
+                .englishProductType(englishProductType)
+                .koreanProductType(koreanProductType)
+                .englishSupplementForm(englishSupplementForm)
+                .koreanSupplementForm(koreanSupplementForm)
+                .englishSuggestedUse(englishSuggestedUse)
+                .koreanSuggestedUse(koreanSuggestedUse)
+                .englishOtherIngredients(englishOtherIngredients)
+                .koreanOtherIngredients(koreanOtherIngredients)
                 .build();
     }
+
+    public void update(
+            String name,
+            String brandName,
+            String madeInCountry,
+            String englishNetContent,
+            String koreanNetContent,
+            String servingSize,
+            String englishProductType,
+            String koreanProductType,
+            String englishSupplementForm,
+            String koreanSupplementForm,
+            String englishSuggestedUse,
+            String koreanSuggestedUse,
+            String englishOtherIngredients,
+            String koreanOtherIngredients
+    ) {
+        this.name = name;
+        this.brandName = brandName;
+        this.madeInCountry = madeInCountry;
+        this.englishNetContent = englishNetContent;
+        this.koreanNetContent = koreanNetContent;
+        this.servingSize = servingSize;
+        this.englishProductType = englishProductType;
+        this.koreanProductType = koreanProductType;
+        this.englishSupplementForm = englishSupplementForm;
+        this.koreanSupplementForm = koreanSupplementForm;
+        this.englishSuggestedUse = englishSuggestedUse;
+        this.koreanSuggestedUse = koreanSuggestedUse;
+        this.englishOtherIngredients = englishOtherIngredients;
+        this.koreanOtherIngredients = koreanOtherIngredients;
+    }
+
+    public void addProductMarket(ProductMarket productMarket) {
+        this.productMarketList.add(productMarket);
+    }
+
+    public void setProductIngredientJoinList(List<ProductIngredientJoin> productIngredientJoinList) {
+        this.productIngredientJoinList = productIngredientJoinList;
+    }
+
+    public void addProductLabelStatement(ProductLabelStatement productLabelStatement) {
+        this.productLabelStatementList.add(productLabelStatement);
+    }
+
 
 }

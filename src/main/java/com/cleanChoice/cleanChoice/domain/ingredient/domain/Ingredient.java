@@ -4,6 +4,7 @@ import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -38,25 +39,31 @@ public class Ingredient extends BaseEntity {
     private Boolean isClearanceBaned = false;
 
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-    private List<BanedIngredientInfo> banedIngredientInfoList;
+    @Builder.Default
+    private List<BanedIngredientInfo> banedIngredientInfoList = new ArrayList<>();
 
-    public static Ingredient of(String englishName, String koreanName) {
+    public static Ingredient of(
+            String englishCategory,
+            String koreanCategory,
+            String englishName,
+            String koreanName,
+            String effectiveness
+    ) {
         return Ingredient.builder()
+                .englishCategory(englishCategory)
+                .koreanCategory(koreanCategory)
                 .englishName(englishName)
                 .koreanName(koreanName)
+                .effectiveness(effectiveness)
                 .build();
     }
 
-    public static Ingredient englishNameOf(String englishName) {
-        return Ingredient.builder()
-                .englishName(englishName)
-                .build();
+    public void updateIsClearanceBaned(Boolean isClearanceBaned) {
+        this.isClearanceBaned = isClearanceBaned;
     }
 
-    public static Ingredient koreanNameOf(String koreanName) {
-        return Ingredient.builder()
-                .koreanName(koreanName)
-                .build();
+    public void addBanedIngredientInfo(BanedIngredientInfo banedIngredientInfo) {
+        this.banedIngredientInfoList.add(banedIngredientInfo);
     }
 
 }

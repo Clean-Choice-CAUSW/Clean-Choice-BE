@@ -1,5 +1,7 @@
 package com.cleanChoice.cleanChoice.global.dtoMapper;
 
+import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbAnalyzeResponseDto;
+import com.cleanChoice.cleanChoice.domain.home.dto.response.AnalyzeResponseDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanedIngredientInfo;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.CombineUseBanedIngredientInfo;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
@@ -11,10 +13,7 @@ import com.cleanChoice.cleanChoice.domain.product.domain.Product;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductIngredientJoin;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductLabelStatement;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductIngredientJoinResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductLabelStatementResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductResponseDto;
+import com.cleanChoice.cleanChoice.domain.product.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +22,14 @@ import org.springframework.stereotype.Component;
 public class DtoMapperUtil {
 
     private final CombineUseBanedIngredientRepository combineUseBanedIngredientRepository;
+
+    public AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket productMarket, AnalyzeType analyzeType) {
+        return DtoMapper.INSTANCE.toAnalyzeResponseDto(
+                productMarket,
+                toProductResponseDto(productMarket.getProduct()),
+                analyzeType
+        );
+    }
 
     public ProductMarketResponseDto toProductMarketResponseDto(ProductMarket productMarket) {
         return DtoMapper.INSTANCE.toProductMarketResponseDto(

@@ -1,6 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.embTest.service;
 
-import com.cleanChoice.cleanChoice.domain.embTest.dto.AnalyzeResponseDto;
+import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbAnalyzeResponseDto;
 import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbRequestDto;
 import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
 import com.cleanChoice.cleanChoice.domain.embTest.domain.EmbTest;
@@ -48,7 +48,7 @@ public class EmbService {
         embTestRepository.saveAll(embTestList);
     }
 
-    public List<AnalyzeResponseDto> analyze(EmbRequestDto embRequestDto) {
+    public List<EmbAnalyzeResponseDto> analyze(EmbRequestDto embRequestDto) {
         List<EmbRequestDto> embRequestDtoList = new ArrayList<>();
         embRequestDtoList.add(embRequestDto);
         List<EmbResponseDto> analysisResultList = flaskApiService.getEmbeddingVectorList(embRequestDtoList);
@@ -59,7 +59,7 @@ public class EmbService {
                 analysisResult.getBrandNameVectorList().toString()
         );
 
-        List<AnalyzeResponseDto> analyzeResponseDtoList = embTestList
+        List<EmbAnalyzeResponseDto> embAnalyzeResponseDtoList = embTestList
                 .stream()
                 .map(embTest -> {
                     List<Float> nameVectorList = new ArrayList<>();
@@ -70,7 +70,7 @@ public class EmbService {
                     for (float v : embTest.getBrandNameVector()) {
                         brandNameVectorList.add(v);
                     }
-                    return AnalyzeResponseDto.builder()
+                    return EmbAnalyzeResponseDto.builder()
                             .productName(embTest.getProductName())
                             .brandName(embTest.getBrandName())
                             //.productNameVectorList(nameVectorList)
@@ -81,7 +81,7 @@ public class EmbService {
                         }
                 ).toList();
 
-        return analyzeResponseDtoList;
+        return embAnalyzeResponseDtoList;
     }
 
 

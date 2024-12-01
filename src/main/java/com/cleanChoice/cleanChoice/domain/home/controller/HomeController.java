@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.home.controller;
 
+import com.cleanChoice.cleanChoice.domain.home.dto.response.AnalyzeResponseDto;
 import com.cleanChoice.cleanChoice.domain.home.service.HomeService;
 import com.cleanChoice.cleanChoice.domain.home.dto.request.AnalyzeRequestDto;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
@@ -34,12 +35,13 @@ public class HomeController {
     @PostMapping("/analyze")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "상품 URL DB 분석", description = "상품 URL을 DB 데이터와 비교해 분석합니다." +
-            "맞았는지 틀렸는지 사용자 선택을 \"/api/v1/home/result-correct\"를 다시 보내야 합니다.")
-    public ProductMarketResponseDto analyzeWithDB(
+            "Response의 AnalyzeType이 DB_COSINE_DISTANCE일 경우 맞았는지 틀렸는지 사용자 선택을 \"/api/v1/home/result-correct\"를 다시 보내야 합니다." +
+            "AnalyzeType이 LLM_PARSED일 경우 다시 보내면 안 됩니다.")
+    public AnalyzeResponseDto analyzeWithDB(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody @Valid AnalyzeRequestDto homeRequestDto
     ) {
-        return homeService.analyzeWithDB(customUserDetails.getMember(), homeRequestDto);
+        return homeService.analyze(customUserDetails.getMember(), homeRequestDto);
     }
 
     /*

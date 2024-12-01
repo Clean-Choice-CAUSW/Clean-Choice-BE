@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.global.dtoMapper;
 
+import com.cleanChoice.cleanChoice.domain.home.dto.response.AnalyzeResponseDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanType;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanedIngredientInfo;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.CombineUseBanedIngredientInfo;
@@ -10,10 +11,7 @@ import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.IngredientResp
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.domain.product.domain.*;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductIngredientJoinResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductLabelStatementResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductResponseDto;
+import com.cleanChoice.cleanChoice.domain.product.dto.response.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -60,6 +58,11 @@ public interface DtoMapper {
     @CommonEntityMappings
     @Mapping(target = "productResponseDto", source = "productResponseDto")
     ProductMarketResponseDto toProductMarketResponseDto(ProductMarket entity, ProductResponseDto productResponseDto);
+
+    @CommonEntityMappings
+    @Mapping(target = "productResponseDto", source = "productResponseDto")
+    @Mapping(target = "analyzeType", source = "analyzeType")
+    AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket entity, ProductResponseDto productResponseDto, AnalyzeType analyzeType);
 
 
     // Product

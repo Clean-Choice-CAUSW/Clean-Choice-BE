@@ -23,10 +23,13 @@ public class AnalyzeRequestDto {
     @NotBlank(message = "brandName 은 필수 입력 값입니다.")
     private String brandName;
 
+    /*
     @Schema(description = "상품 가격(수) nullable 임", example = "10000", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Long price;
 
     @Schema(description = "상품 가격 단위 nullable 임", example = "USD", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String priceUnit;
+
+     */
 
 }

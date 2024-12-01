@@ -2,15 +2,12 @@ package com.cleanChoice.cleanChoice.domain.ingredient.domain;
 
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "pregnant_baned_ingredient")
 public class BanedIngredientInfo extends BaseEntity {
@@ -25,5 +22,17 @@ public class BanedIngredientInfo extends BaseEntity {
 
     @Column(name = "description", nullable = true)
     private String description;
+
+    public static BanedIngredientInfo of(
+            Ingredient ingredient,
+            BanType banType,
+            String description
+    ) {
+        return BanedIngredientInfo.builder()
+                .ingredient(ingredient)
+                .banType(banType)
+                .description(description)
+                .build();
+    }
 
 }

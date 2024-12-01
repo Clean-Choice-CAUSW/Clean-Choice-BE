@@ -17,7 +17,7 @@ public class ProductIngredientJoin extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST })
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
@@ -48,8 +48,27 @@ public class ProductIngredientJoin extends BaseEntity {
     @Column(name = "korean_daily_value_target_group", nullable = true)
     private String koreanDailyValueTargetGroup;
 
-    public static ProductIngredientJoin of() {
+    public static ProductIngredientJoin of(
+            Product product,
+            Ingredient ingredient,
+            Double servingSize,
+            String servingUnit,
+            Double amountPerServing,
+            String amountPerServingUnit,
+            Double dailyValuePerServing,
+            String englishDailyValueTargetGroup,
+            String koreanDailyValueTargetGroup
+    ) {
         return ProductIngredientJoin.builder()
+                .product(product)
+                .ingredient(ingredient)
+                .servingSize(servingSize)
+                .servingUnit(servingUnit)
+                .amountPerServing(amountPerServing)
+                .amountPerServingUnit(amountPerServingUnit)
+                .dailyValuePerServing(dailyValuePerServing)
+                .englishDailyValueTargetGroup(englishDailyValueTargetGroup)
+                .koreanDailyValueTargetGroup(koreanDailyValueTargetGroup)
                 .build();
     }
 

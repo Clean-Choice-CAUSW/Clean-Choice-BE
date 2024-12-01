@@ -82,6 +82,7 @@ public class SecurityConfig {
                                 // S3 upload 테스트 API
                                 .requestMatchers("api/v1/uuid-file/**").permitAll()
                                 .requestMatchers("api/v1/emb/**").permitAll()
+                                .requestMatchers("api/v1/openai/**").permitAll()
                                 // Swagger UI에 대해서는 모든 요청을 허가
                                 .requestMatchers(
                                         "/auth/**",

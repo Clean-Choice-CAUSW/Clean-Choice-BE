@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum BanType {
 
     PREGNANT_BANDED("임부 금기"),
-    OLD_CAUTION("노인 주의");
+    OLD_CAUTION("노인 주의"),
+    OTHER("기타");
 
     private final String description;
 

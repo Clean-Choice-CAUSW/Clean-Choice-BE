@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnalyzeResponseDto {
+public class EmbAnalyzeResponseDto {
 
     private String productName;
 

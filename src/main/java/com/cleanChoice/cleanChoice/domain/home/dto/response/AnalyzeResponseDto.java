@@ -1,5 +1,7 @@
-package com.cleanChoice.cleanChoice.domain.product.dto.response;
+package com.cleanChoice.cleanChoice.domain.home.dto.response;
 
+import com.cleanChoice.cleanChoice.domain.product.dto.response.AnalyzeType;
+import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductMarketResponseDto {
+public class AnalyzeResponseDto {
 
     @Schema(description = "상품 시장 id 값", example = "1")
     private Long id;
@@ -18,10 +20,7 @@ public class ProductMarketResponseDto {
     @Schema(description = "상품 DTO")
     private ProductResponseDto productResponseDto;
 
-    @Schema(description = "상품 이미지 url", example = "https://www.s3-bucket.com/image.jpg")
-    private String imageUrl;
-
-    @Schema(description = "상품 마켓 url", example = "https://www.amazon.com")
+    @Schema(description = "상품 시장 url", example = "https://www.amazon.com")
     private String url;
 
     @Schema(description = "상품 가격(수)", example = "10000")
@@ -29,6 +28,9 @@ public class ProductMarketResponseDto {
 
     @Schema(description = "상품 가격 단위", example = "USD")
     private String priceUnit;
+
+    @Schema(description = "분석 타입(LLM_PARSED / DB_COSINE_DISTANCE)", example = "DB_COSINE_DISTANCE")
+    private AnalyzeType analyzeType;
 
     private LocalDateTime createdAt;
 

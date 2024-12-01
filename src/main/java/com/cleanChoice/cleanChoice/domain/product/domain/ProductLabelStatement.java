@@ -28,4 +28,18 @@ public class ProductLabelStatement extends BaseEntity {
     @Column(name = "korean_statement", nullable = false)
     private String koreanStatement;
 
+    public static ProductLabelStatement of(
+            Product product,
+            StatementType statementType,
+            String englishStatement,
+            String koreanStatement
+    ) {
+        return ProductLabelStatement.builder()
+                .product(product)
+                .statementType(statementType)
+                .englishStatement(englishStatement)
+                .koreanStatement(koreanStatement)
+                .build();
+    }
+
 }
