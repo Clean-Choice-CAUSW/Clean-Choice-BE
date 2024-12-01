@@ -23,8 +23,13 @@ public class ShopRecord extends BaseEntity {
     @JoinColumn(name = "product_market_id", nullable = false)
     private ProductMarket productMarket;
 
-    public static ShopRecord of() {
+    public static ShopRecord of(
+            Member member,
+            ProductMarket productMarket
+    ) {
         return ShopRecord.builder()
+                .member(member)
+                .productMarket(productMarket)
                 .build();
     }
 

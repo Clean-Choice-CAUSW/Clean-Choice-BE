@@ -18,6 +18,8 @@ import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasket;
 import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasketProductJoin;
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProductJoinResponseDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketResponseDto;
+import com.cleanChoice.cleanChoice.domain.shopRecord.domain.ShopRecord;
+import com.cleanChoice.cleanChoice.domain.shopRecord.dto.response.ShopRecordResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -148,6 +150,17 @@ public interface DtoMapper {
     @Mapping(target = "productMarketResponseDto", source = "productMarketResponseDto")
     ShopBasketProductJoinResponseDto toShopBasketProductJoinResponseDto(
             ShopBasketProductJoin entity,
+            ProductMarketResponseDto productMarketResponseDto
+    );
+
+
+    // ShopRecord
+
+    @CommonEntityMappings
+    @Mapping(target = "memberId", source = "entity.member.id")
+    @Mapping(target = "productMarketResponseDto", source = "productMarketResponseDto")
+    ShopRecordResponseDto toShopRecordResponseDto(
+            ShopRecord entity,
             ProductMarketResponseDto productMarketResponseDto
     );
 
