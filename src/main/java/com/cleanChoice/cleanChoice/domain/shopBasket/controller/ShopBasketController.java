@@ -35,9 +35,10 @@ public class ShopBasketController {
     @Operation(summary = "상품 추가", description = "장바구니에 상품을 추가합니다.")
     public ShopBasketProductJoinResponseDto addProduct(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestHeader Long shopBasketId,
             @RequestHeader Long productMarketId
     ) {
-        return shopBasketService.addProduct(customUserDetails.getMember(), productMarketId);
+        return shopBasketService.addProduct(customUserDetails.getMember(), shopBasketId, productMarketId);
     }
 
     @GetMapping("/list")
@@ -83,9 +84,10 @@ public class ShopBasketController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "상품 전체 삭제", description = "장바구니에 있는 모든 상품을 삭제합니다.")
     public List<ShopBasketProductJoinResponseDto> deleteAllProduct(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestHeader Long shopBasketId
     ) {
-        return shopBasketService.deleteAllProduct(customUserDetails.getMember());
+        return shopBasketService.deleteAllProduct(customUserDetails.getMember(), shopBasketId);
     }
 
     @DeleteMapping

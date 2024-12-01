@@ -18,9 +18,18 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "마켓 등록된 상품 조회", description = "상품을 조회합니다. 조회시 조회 카운트가 증가합니다.")
     public ProductResponseDto getProductMarket(
-            @PathVariable String productMarketId
+            @PathVariable Long productMarketId
     ) {
         return productService.getProduct(productMarketId);
+    }
+
+    @GetMapping("/search/name")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "상품 이름으로 검색", description = "상품 이름으로 상품을 검색합니다.")
+    public ProductResponseDto searchProductByName(
+            @RequestParam String name
+    ) {
+        return productService.searchProductByName(name);
     }
 
 }

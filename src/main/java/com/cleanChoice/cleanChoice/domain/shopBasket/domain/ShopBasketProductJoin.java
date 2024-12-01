@@ -22,8 +22,13 @@ public class ShopBasketProductJoin extends BaseEntity {
     @JoinColumn(name = "product_market_id", nullable = false)
     private ProductMarket productMarket;
 
-    public static ShopBasketProductJoin of() {
+    public static ShopBasketProductJoin of(
+            ShopBasket shopBasket,
+            ProductMarket productMarket
+    ) {
         return ShopBasketProductJoin.builder()
+                .shopBasket(shopBasket)
+                .productMarket(productMarket)
                 .build();
     }
 }

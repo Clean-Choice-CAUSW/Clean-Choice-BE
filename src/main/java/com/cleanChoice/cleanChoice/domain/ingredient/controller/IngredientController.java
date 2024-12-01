@@ -23,4 +23,13 @@ public class IngredientController {
         return ingredientService.getIngredientById(ingredientId);
     }
 
+    @GetMapping("/search/name")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "성분 이름으로 검색(영어, 한글 상관 없음)", description = "성분 이름으로 성분을 검색합니다.")
+    public IngredientResponseDto searchIngredientByName(
+            @RequestParam String name
+    ) {
+        return ingredientService.searchIngredientByName(name);
+    }
+
 }

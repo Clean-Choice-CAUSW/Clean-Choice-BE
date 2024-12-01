@@ -15,6 +15,10 @@ import com.cleanChoice.cleanChoice.domain.product.domain.ProductIngredientJoin;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductLabelStatement;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.*;
+import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasket;
+import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasketProductJoin;
+import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProductJoinResponseDto;
+import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -84,6 +88,21 @@ public class DtoMapperUtil {
                 intakeIngredient.getIngredient() == null ?
                         null :
                         toIngredientResponseDto(intakeIngredient.getIngredient())
+        );
+    }
+
+    public ShopBasketResponseDto toShopBasketResponseDto(ShopBasket shopBasket) {
+        return DtoMapper.INSTANCE.toShopBasketResponseDto(
+                shopBasket,
+                shopBasket.getShopBasketProductJoinList()
+                        .stream().map(this::toShopBasketProductJoinResponseDto).toList()
+        );
+    }
+
+    public ShopBasketProductJoinResponseDto toShopBasketProductJoinResponseDto(ShopBasketProductJoin shopBasketProductJoin) {
+        return DtoMapper.INSTANCE.toShopBasketProductJoinResponseDto(
+                shopBasketProductJoin,
+                toProductMarketResponseDto(shopBasketProductJoin.getProductMarket())
         );
     }
 

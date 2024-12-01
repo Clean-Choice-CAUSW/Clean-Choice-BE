@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.ingredient.service;
 
+import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.IngredientRepository;
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.IngredientResponseDto;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
@@ -20,7 +21,16 @@ public class IngredientService {
 
 
     public IngredientResponseDto getIngredientById(Long ingredientId) {
-        return dtoMapperUtil.toIngredientResponseDto(ingredientRepository.findById(ingredientId)
-                .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST)));
+        return dtoMapperUtil.toIngredientResponseDto(
+                ingredientRepository.findById(ingredientId)
+                        .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST))
+        );
+    }
+
+    public IngredientResponseDto searchIngredientByName(String name) {
+        return dtoMapperUtil.toIngredientResponseDto(
+                ingredientRepository.findByName(name)
+                        .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST))
+        );
     }
 }

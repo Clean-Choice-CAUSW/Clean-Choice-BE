@@ -95,7 +95,10 @@ public class LLMService {
             // Ingredient 찾기
             Ingredient ingredient = ingredientRepository
                     .findByEnglishName(productIngredientJoinLLMResponseDto.getEnglishName())
-                    .orElse(null);
+                    .orElse(
+                            ingredientRepository.findByKoreanName(productIngredientJoinLLMResponseDto.getKoreanName())
+                                    .orElse(null)
+                    );
 
             // Ingredient 없으면 새로 만들기
             if (ingredient == null) {

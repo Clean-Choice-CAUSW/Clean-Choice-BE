@@ -26,8 +26,10 @@ public class ShopBasket extends BaseEntity {
     private List<ShopBasketProductJoin> shopBasketProductJoinList;
 
 
-    public static ShopBasket of() {
+    public static ShopBasket of(Member member, String name) {
         return ShopBasket.builder()
+                .member(member)
+                .name(name)
                 .build();
     }
 

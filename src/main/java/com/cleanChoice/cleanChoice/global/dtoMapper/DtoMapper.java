@@ -14,6 +14,10 @@ import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.domain.product.domain.*;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.*;
+import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasket;
+import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasketProductJoin;
+import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProductJoinResponseDto;
+import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -126,6 +130,25 @@ public interface DtoMapper {
     IntakeIngredientResponseDto toIntakeIngredientResponseDto(
             IntakeIngredient entity,
             IngredientResponseDto ingredientResponseDto
+    );
+
+
+    // ShopBasket
+
+    @CommonEntityMappings
+    @Mapping(target = "memberId", source = "entity.member.id")
+    @Mapping(target = "shopBasketProductJoinResponseDtoList", source = "shopBasketProductJoinResponseDtoList")
+    ShopBasketResponseDto toShopBasketResponseDto(
+            ShopBasket entity,
+            List<ShopBasketProductJoinResponseDto> shopBasketProductJoinResponseDtoList
+    );
+
+    @CommonEntityMappings
+    @Mapping(target = "shopBasketId", source = "entity.id")
+    @Mapping(target = "productMarketResponseDto", source = "productMarketResponseDto")
+    ShopBasketProductJoinResponseDto toShopBasketProductJoinResponseDto(
+            ShopBasketProductJoin entity,
+            ProductMarketResponseDto productMarketResponseDto
     );
 
 }
