@@ -21,6 +21,8 @@ import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProd
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketResponseDto;
 import com.cleanChoice.cleanChoice.domain.shopRecord.domain.ShopRecord;
 import com.cleanChoice.cleanChoice.domain.shopRecord.dto.response.ShopRecordResponseDto;
+import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
+import com.cleanChoice.cleanChoice.domain.viewRecord.dto.response.ViewRecordResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -113,6 +115,15 @@ public class DtoMapperUtil {
                 shopRecord,
                 toProductMarketResponseDto(
                         shopRecord.getProductMarket()
+                )
+        );
+    }
+
+    public ViewRecordResponseDto toViewRecordResponseDto(ViewRecord viewRecord) {
+        return DtoMapper.INSTANCE.toViewRecordResponseDto(
+                viewRecord,
+                toProductMarketResponseDto(
+                        viewRecord.getProductMarket()
                 )
         );
     }

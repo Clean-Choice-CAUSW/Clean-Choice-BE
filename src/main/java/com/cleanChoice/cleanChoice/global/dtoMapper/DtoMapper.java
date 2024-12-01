@@ -20,6 +20,8 @@ import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProd
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketResponseDto;
 import com.cleanChoice.cleanChoice.domain.shopRecord.domain.ShopRecord;
 import com.cleanChoice.cleanChoice.domain.shopRecord.dto.response.ShopRecordResponseDto;
+import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
+import com.cleanChoice.cleanChoice.domain.viewRecord.dto.response.ViewRecordResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -161,6 +163,15 @@ public interface DtoMapper {
     @Mapping(target = "productMarketResponseDto", source = "productMarketResponseDto")
     ShopRecordResponseDto toShopRecordResponseDto(
             ShopRecord entity,
+            ProductMarketResponseDto productMarketResponseDto
+    );
+
+
+    // ViewRecord
+    @CommonEntityMappings
+    @Mapping(target = "memberId", source = "entity.member.id")
+    ViewRecordResponseDto toViewRecordResponseDto(
+            ViewRecord entity,
             ProductMarketResponseDto productMarketResponseDto
     );
 
