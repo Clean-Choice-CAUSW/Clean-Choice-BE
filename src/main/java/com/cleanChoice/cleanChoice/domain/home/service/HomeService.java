@@ -14,6 +14,7 @@ import com.cleanChoice.cleanChoice.domain.product.dto.response.AnalyzeType;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.repository.ViewRecordRepository;
+import com.cleanChoice.cleanChoice.domain.viewRecord.service.ViewRecordService;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
@@ -37,6 +38,7 @@ public class HomeService {
     private final FlaskApiService flaskApiService;
     private final LLMService llmService;
     private final ViewRecordRepository viewRecordRepository;
+    private final ViewRecordService viewRecordService;
 
     @Transactional
     public AnalyzeResponseDto analyze(
@@ -73,8 +75,7 @@ public class HomeService {
             );
 
             // view record 저장
-            ViewRecord viewRecord = ViewRecord.of(member, productMarket);
-            viewRecordRepository.save(viewRecord);
+            viewRecordService.createViewRecord(member, productMarket);
 
             EmbResponseDto newEmbResponseDto = flaskApiService.getEmbeddingVector(
                     productMarket.getProduct().getName(),
@@ -110,8 +111,7 @@ public class HomeService {
             productMarketRepository.save(productMarket);
 
             // view record 저장
-            ViewRecord viewRecord = ViewRecord.of(member, productMarket);
-            viewRecordRepository.save(viewRecord);
+            viewRecordService.createViewRecord(member, productMarket);
 
             return dtoMapperUtil.toProductMarketResponseDto(productMarket);
         }
@@ -120,8 +120,7 @@ public class HomeService {
             productMarket = getProductMarketByLLMRequest(productMarket.getUrl(), productMarket.getProduct());
 
             // view record 저장
-            ViewRecord viewRecord = ViewRecord.of(member, productMarket);
-            viewRecordRepository.save(viewRecord);
+            viewRecordService.createViewRecord(member, productMarket);
 
             EmbResponseDto embResponseDto = flaskApiService.getEmbeddingVector(
                     productMarket.getProduct().getName(),

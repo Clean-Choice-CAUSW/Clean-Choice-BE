@@ -40,6 +40,7 @@ public class DtoMapperUtil {
         );
     }
 
+    // TODO: 사용자 개인화 정보 마스킹 코드 추가 필요
     public ProductMarketResponseDto toProductMarketResponseDto(ProductMarket productMarket) {
         return DtoMapper.INSTANCE.toProductMarketResponseDto(
                 productMarket,

@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ViewRecordRepository extends JpaRepository<ViewRecord, Long> {
-    List<ViewRecord> findAllByMember(Member member);
+
+    List<ViewRecord> findByMemberOrderByCreatedAtDesc(Member member);
+
 }

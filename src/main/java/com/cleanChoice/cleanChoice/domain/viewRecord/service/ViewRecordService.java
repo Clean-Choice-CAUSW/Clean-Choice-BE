@@ -1,12 +1,14 @@
 package com.cleanChoice.cleanChoice.domain.viewRecord.service;
 
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
+import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.repository.ViewRecordRepository;
 import com.cleanChoice.cleanChoice.domain.viewRecord.dto.response.ViewRecordResponseDto;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
+import com.cleanChoice.cleanChoice.global.util.StaticValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +21,32 @@ import java.util.List;
 public class ViewRecordService {
 
     private final ViewRecordRepository viewRecordRepository;
+
     private final DtoMapperUtil dtoMapperUtil;
 
-
     public List<ViewRecordResponseDto> getViewRecordList(Member member) {
-        return viewRecordRepository.findAllByMember(member)
+        return viewRecordRepository.findByMemberOrderByCreatedAtDesc(member)
                 .stream()
                 .map(dtoMapperUtil::toViewRecordResponseDto)
                 .toList();
+    }
+
+    @Transactional
+    public ViewRecordResponseDto createViewRecord(Member member, ProductMarket productMarket) {
+        List<ViewRecord> viewRecordList = viewRecordRepository.findByMemberOrderByCreatedAtDesc(member);
+
+        if (viewRecordList.size() >= StaticValue.MAX_VIEW_RECORD_SIZE) {
+            viewRecordRepository.delete(viewRecordList.get(viewRecordList.size() - 1));
+        }
+
+        return dtoMapperUtil.toViewRecordResponseDto(
+                viewRecordRepository.save(
+                        ViewRecord.of(
+                                member,
+                                productMarket
+                        )
+                )
+        );
     }
 
     @Transactional
@@ -44,7 +64,7 @@ public class ViewRecordService {
 
     @Transactional
     public List<ViewRecordResponseDto> deleteAllViewRecord(Member member) {
-        List<ViewRecord> viewRecordList = viewRecordRepository.findAllByMember(member);
+        List<ViewRecord> viewRecordList = viewRecordRepository.findByMemberOrderByCreatedAtDesc(member);
 
         viewRecordRepository.deleteAll(viewRecordList);
 
@@ -52,4 +72,5 @@ public class ViewRecordService {
                 .map(dtoMapperUtil::toViewRecordResponseDto)
                 .toList();
     }
+
 }
