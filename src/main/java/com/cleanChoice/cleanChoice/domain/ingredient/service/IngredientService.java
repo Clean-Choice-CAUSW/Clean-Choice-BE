@@ -1,9 +1,10 @@
 package com.cleanChoice.cleanChoice.domain.ingredient.service;
 
-import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.BanedIngredientInfoRepository;
-import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.CombineUseBanedIngredientRepository;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.IngredientRepository;
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.IngredientResponseDto;
+import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
+import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
+import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
-    private final BanedIngredientInfoRepository banedIngredientInfoRepository;
-    private final CombineUseBanedIngredientRepository combineUseBanedIngredientRepository;
+
+    private final DtoMapperUtil dtoMapperUtil;
 
 
     public IngredientResponseDto getIngredientById(Long ingredientId) {
-        return null;
+        return dtoMapperUtil.toIngredientResponseDto(ingredientRepository.findById(ingredientId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST)));
     }
 }

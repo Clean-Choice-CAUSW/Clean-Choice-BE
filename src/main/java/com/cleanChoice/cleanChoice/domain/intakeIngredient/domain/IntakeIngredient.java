@@ -3,7 +3,6 @@ package com.cleanChoice.cleanChoice.domain.intakeIngredient.domain;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,10 +31,31 @@ public class IntakeIngredient extends BaseEntity {
     @Column(name = "unit", nullable = true)
     private String unit;
 
-    public static IntakeIngredient of(Member member, Ingredient ingredient) {
+    public static IntakeIngredient createWithIngredient(
+            Member member,
+            Ingredient ingredient,
+            Double amount,
+            String unit
+    ) {
         return IntakeIngredient.builder()
                 .member(member)
                 .ingredient(ingredient)
+                .amount(amount)
+                .unit(unit)
+                .build();
+    }
+
+    public static IntakeIngredient createWithFakeName(
+            Member member,
+            String fakeName,
+            Double amount,
+            String unit
+    ) {
+        return IntakeIngredient.builder()
+                .member(member)
+                .fakeName(fakeName)
+                .amount(amount)
+                .unit(unit)
                 .build();
     }
 

@@ -76,7 +76,17 @@ public class HomeService {
             ViewRecord viewRecord = ViewRecord.of(member, productMarket);
             viewRecordRepository.save(viewRecord);
 
-            // TODO: 임베딩 벡터 저장
+            EmbResponseDto newEmbResponseDto = flaskApiService.getEmbeddingVector(
+                    productMarket.getProduct().getName(),
+                    productMarket.getProduct().getBrandName()
+            );
+
+            NameBrandNameVector nameBrandNameVector = NameBrandNameVector.createWithProductMarket(
+                    productMarket,
+                    newEmbResponseDto.getProductNameVectorList(),
+                    newEmbResponseDto.getBrandNameVectorList()
+            );
+            nameBrandNameVectorRepository.save(nameBrandNameVector);
 
             return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.LLM_ANALYZE);
         }

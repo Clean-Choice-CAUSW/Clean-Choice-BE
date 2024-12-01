@@ -8,6 +8,8 @@ import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.BanedIngredientInfoResponseDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.CombineUseBanedIngredientInfoResponseDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.IngredientResponseDto;
+import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
+import com.cleanChoice.cleanChoice.domain.intakeIngredient.dto.response.IntakeIngredientResponseDto;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.domain.product.domain.*;
@@ -113,6 +115,17 @@ public interface DtoMapper {
     @Mapping(target = "combineIngredientKoreanName", source = "entity.ingredient.koreanName")
     CombineUseBanedIngredientInfoResponseDto toCombineUseBanedIngredientInfoResponseDto(
             CombineUseBanedIngredientInfo entity
+    );
+
+
+    // IntakeIngredient
+
+    @CommonEntityMappings
+    @Mapping(target = "memberId", source = "entity.member.id")
+    @Mapping(target = "ingredientResponseDto", source = "ingredientResponseDto")
+    IntakeIngredientResponseDto toIntakeIngredientResponseDto(
+            IntakeIngredient entity,
+            IngredientResponseDto ingredientResponseDto
     );
 
 }
