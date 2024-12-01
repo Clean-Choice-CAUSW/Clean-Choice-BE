@@ -1,4 +1,4 @@
-package com.cleanChoice.cleanChoice.domain.home.openAi.util;
+package com.cleanChoice.cleanChoice.domain.openAi.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

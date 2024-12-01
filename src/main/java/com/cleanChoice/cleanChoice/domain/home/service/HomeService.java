@@ -1,10 +1,10 @@
 package com.cleanChoice.cleanChoice.domain.home.service;
 
-import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
-import com.cleanChoice.cleanChoice.domain.embTest.service.FlaskApiService;
+import com.cleanChoice.cleanChoice.domain.embedding.dto.EmbResponseDto;
+import com.cleanChoice.cleanChoice.domain.embedding.service.FlaskApiService;
 import com.cleanChoice.cleanChoice.domain.home.dto.request.AnalyzeRequestDto;
 import com.cleanChoice.cleanChoice.domain.home.dto.response.AnalyzeResponseDto;
-import com.cleanChoice.cleanChoice.domain.home.openAi.service.LLMService;
+import com.cleanChoice.cleanChoice.domain.openAi.service.LLMService;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.product.domain.*;
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.NameBrandNameVectorRepository;
@@ -12,7 +12,6 @@ import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductMarke
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.dto.NameVectorWithDistanceDto;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.AnalyzeType;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
-import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.repository.ViewRecordRepository;
 import com.cleanChoice.cleanChoice.domain.viewRecord.service.ViewRecordService;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;

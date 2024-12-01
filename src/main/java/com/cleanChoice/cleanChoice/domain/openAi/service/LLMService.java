@@ -1,11 +1,11 @@
-package com.cleanChoice.cleanChoice.domain.home.openAi.service;
+package com.cleanChoice.cleanChoice.domain.openAi.service;
 
-import com.cleanChoice.cleanChoice.domain.home.openAi.dto.convert.ProductIngredientJoinLLMResponseDto;
-import com.cleanChoice.cleanChoice.domain.home.openAi.dto.convert.ProductLabelStatementLLMResponseDto;
-import com.cleanChoice.cleanChoice.domain.home.openAi.dto.convert.ProductMarketLLMResponseDto;
-import com.cleanChoice.cleanChoice.domain.home.openAi.dto.OpenAiRequestDto;
-import com.cleanChoice.cleanChoice.domain.home.openAi.dto.OpenAiResponseDto;
-import com.cleanChoice.cleanChoice.domain.home.openAi.util.ResponseDtoText;
+import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductIngredientJoinLLMResponseDto;
+import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductLabelStatementLLMResponseDto;
+import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductMarketLLMResponseDto;
+import com.cleanChoice.cleanChoice.domain.openAi.dto.OpenAiRequestDto;
+import com.cleanChoice.cleanChoice.domain.openAi.dto.OpenAiResponseDto;
+import com.cleanChoice.cleanChoice.domain.openAi.util.ResponseDtoText;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanType;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanedIngredientInfo;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;

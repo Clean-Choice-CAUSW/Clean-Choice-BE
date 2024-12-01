@@ -1,4 +1,4 @@
-package com.cleanChoice.cleanChoice.domain.home.openAi.dto.convert;
+package com.cleanChoice.cleanChoice.domain.openAi.dto.convert;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

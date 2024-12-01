@@ -1,4 +1,4 @@
-package com.cleanChoice.cleanChoice.domain.home.openAi.dto;
+package com.cleanChoice.cleanChoice.domain.openAi.dto;
 
 import lombok.Data;
 

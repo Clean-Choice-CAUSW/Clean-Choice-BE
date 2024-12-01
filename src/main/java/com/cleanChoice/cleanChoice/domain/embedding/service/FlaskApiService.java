@@ -1,7 +1,7 @@
-package com.cleanChoice.cleanChoice.domain.embTest.service;
+package com.cleanChoice.cleanChoice.domain.embedding.service;
 
-import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbRequestDto;
-import com.cleanChoice.cleanChoice.domain.embTest.dto.EmbResponseDto;
+import com.cleanChoice.cleanChoice.domain.embedding.dto.EmbRequestDto;
+import com.cleanChoice.cleanChoice.domain.embedding.dto.EmbResponseDto;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import com.cleanChoice.cleanChoice.global.exceptions.InternalServerException;
 import lombok.extern.slf4j.Slf4j;

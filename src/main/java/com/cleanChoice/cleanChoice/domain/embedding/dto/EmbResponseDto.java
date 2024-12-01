@@ -1,4 +1,4 @@
-package com.cleanChoice.cleanChoice.domain.embTest.dto;
+package com.cleanChoice.cleanChoice.domain.embedding.dto;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmbAnalyzeResponseDto {
+public class EmbResponseDto {
 
     private String productName;
 
@@ -18,9 +18,5 @@ public class EmbAnalyzeResponseDto {
     private List<Float> productNameVectorList;
 
     private List<Float> brandNameVectorList;
-
-    private Double nameDistance;
-
-    private Double brandNameDistance;
 
 }

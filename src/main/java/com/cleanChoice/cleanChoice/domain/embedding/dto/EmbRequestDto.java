@@ -1,4 +1,4 @@
-package com.cleanChoice.cleanChoice.domain.embTest.dto;
+package com.cleanChoice.cleanChoice.domain.embedding.dto;
 
 import lombok.*;
 
