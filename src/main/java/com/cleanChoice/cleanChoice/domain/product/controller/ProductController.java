@@ -7,8 +7,10 @@ import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUser
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -57,5 +59,19 @@ public class ProductController {
     ) {
         return productService.deleteMaskingProduct(customUserDetails.getMember(), productMarketId);
     }
+
+    // --------------- Data 등록 API(관리) ---------------
+    @PostMapping(value = "/data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "DB 상품 데이터 등록(FE 사용 X)", description = "DB 상품 데이터 등록(FE 사용 X)")
+    public void insertProductData(
+            @RequestPart(value = "overviewFile") MultipartFile overviewFile,
+            @RequestPart(value = "ingredientFile") MultipartFile ingredientFile,
+            @RequestPart(value = "labelFile") MultipartFile labelFile
+
+    ) {
+        //productService.insertProductData(file);
+    }
+
 
 }

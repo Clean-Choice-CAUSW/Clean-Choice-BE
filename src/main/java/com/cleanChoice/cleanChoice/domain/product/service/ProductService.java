@@ -14,6 +14,7 @@ import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +71,7 @@ public class ProductService {
         );
     }
 
+    @Transactional
     public ProductResponseDto deleteMaskingProduct(Member member, Long productMarketId) {
         ProductMarket productMarket = productMarketRepository.findById(productMarketId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
@@ -84,4 +86,10 @@ public class ProductService {
                 member
         );
     }
+
+    @Transactional
+    public void insertProductData(MultipartFile file) {
+
+    }
+
 }

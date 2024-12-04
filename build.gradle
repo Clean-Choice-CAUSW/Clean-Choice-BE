@@ -111,15 +111,11 @@ dependencies {
 	// junitA
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// spring ai
-	//implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
-
 	// Jackson: JSON 직렬화/역직렬화를 위한 라이브러리
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	// OpenFeign: REST API 호출을 위한 Feign Client (선택 사항)
-	//implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-
+	// CSV 파일 처리
+	implementation 'org.apache.commons:commons-csv:1.10.0'
 
 }
 
