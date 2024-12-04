@@ -1,5 +1,7 @@
 package com.cleanChoice.cleanChoice.domain.openAi.service;
 
+import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
+import com.cleanChoice.cleanChoice.domain.member.domain.Gender;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductIngredientJoinLLMResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductLabelStatementLLMResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductMarketLLMResponseDto;
@@ -272,6 +274,56 @@ public class OpenAiService {
         }
 
         return productMarketLLMResponseDto;
+    }
+
+    public String getAdvice(
+            Integer age,
+            Gender gender,
+            Boolean isPregnant,
+            List<IntakeIngredient> intakeIngredientList,
+            String question
+    ) {
+        StringBuilder questionBuilder = new StringBuilder();
+        questionBuilder.append("저는 ")
+                .append(age)
+                .append("살이고, ")
+                .append("성별은 ")
+                .append(gender.getValue())
+                .append("고 ");
+        if (isPregnant) questionBuilder.append("임신 중이고 ");
+        questionBuilder.append("다음 성분을 섭취했어요\n");
+        for (IntakeIngredient intakeIngredient : intakeIngredientList) {
+            if (intakeIngredient.getFakeName() != null) {
+                questionBuilder.append(intakeIngredient.getFakeName())
+                        .append(" ")
+                        .append(intakeIngredient.getAmount())
+                        .append(intakeIngredient.getUnit())
+                        .append("\n");
+                continue;
+            }
+            questionBuilder.append(
+                    intakeIngredient.getIngredient().getKoreanName() == null ?
+                            intakeIngredient.getIngredient().getEnglishName() :
+                            intakeIngredient.getIngredient().getKoreanName() +
+                                    " " + intakeIngredient.getAmount() + intakeIngredient.getUnit() + "\n"
+            );
+        }
+        if (question == null || question.isBlank()) {
+            questionBuilder.append("제 정보를 기반으로 주의 사항 및 조언을 알려주세요");
+        } else {
+            questionBuilder.append("그리고 제 질문은 ").append(question);
+        }
+
+
+        OpenAiRequestDto.OpenAiMessageDto message = this.buildMessage("user", questionBuilder.toString());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + apiKey);
+        headers.add("Content-Type", "application/json");
+
+        return requestToOpenAi(
+                buildRequest(headers, "gpt-4o", List.of(message), 0.7)
+        );
     }
 
 }

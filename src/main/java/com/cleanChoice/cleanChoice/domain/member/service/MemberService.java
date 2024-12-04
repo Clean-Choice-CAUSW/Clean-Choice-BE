@@ -10,6 +10,7 @@ import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.UpdateMemberRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
+import com.cleanChoice.cleanChoice.domain.openAi.service.OpenAiService;
 import com.cleanChoice.cleanChoice.global.config.jwt.JwtTokenProvider;
 import com.cleanChoice.cleanChoice.global.config.redis.RedisUtils;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapper;
@@ -35,6 +36,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final RedisUtils redisUtils;
     private final JwtTokenProvider jwtTokenProvider;
+    private final OpenAiService openAiService;
 
     @Transactional
     public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -134,14 +136,15 @@ public class MemberService {
     }
 
     public String getAdvice(Member member, String question) {
-        int age = member.getAge();
-        Gender gender = member.getGender();
-        boolean isPregnant = member.getIsPregnant();
-
         List<IntakeIngredient> intakeIngredientList = member.getIntakeIngredientList();
 
-        // TODO: 조언 관련 LLM 모델 연결 필요
-        return "temp advice";
+        return openAiService.getAdvice(
+                member.getAge(),
+                member.getGender(),
+                member.getIsPregnant(),
+                intakeIngredientList,
+                question
+        );
     }
 
     // private method
