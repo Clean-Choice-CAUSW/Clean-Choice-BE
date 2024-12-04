@@ -10,10 +10,9 @@ import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.CombineUseBane
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.IngredientResponseDto;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.dto.response.IntakeIngredientResponseDto;
-import com.cleanChoice.cleanChoice.domain.product.domain.Product;
-import com.cleanChoice.cleanChoice.domain.product.domain.ProductIngredientJoin;
-import com.cleanChoice.cleanChoice.domain.product.domain.ProductLabelStatement;
-import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
+import com.cleanChoice.cleanChoice.domain.member.domain.Member;
+import com.cleanChoice.cleanChoice.domain.product.domain.*;
+import com.cleanChoice.cleanChoice.domain.product.domain.repository.PersonalizedInfoRepository;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.*;
 import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasket;
 import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasketProductJoin;
@@ -23,32 +22,49 @@ import com.cleanChoice.cleanChoice.domain.shopRecord.domain.ShopRecord;
 import com.cleanChoice.cleanChoice.domain.shopRecord.dto.response.ShopRecordResponseDto;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
 import com.cleanChoice.cleanChoice.domain.viewRecord.dto.response.ViewRecordResponseDto;
+import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
+import com.cleanChoice.cleanChoice.global.exceptions.InternalServerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class DtoMapperUtil {
 
     private final CombineUseBanedIngredientRepository combineUseBanedIngredientRepository;
+    private final PersonalizedInfoRepository personalizedInfoRepository;
 
-    public AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket productMarket, AnalyzeType analyzeType) {
+    public AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket productMarket, AnalyzeType analyzeType, Member member) {
         return DtoMapper.INSTANCE.toAnalyzeResponseDto(
                 productMarket,
-                toProductResponseDto(productMarket.getProduct()),
+                toProductResponseDto(productMarket.getProduct(), member),
                 analyzeType
         );
     }
 
     // TODO: 사용자 개인화 정보 마스킹 코드 추가 필요
-    public ProductMarketResponseDto toProductMarketResponseDto(ProductMarket productMarket) {
+    public ProductMarketResponseDto toProductMarketResponseDto(ProductMarket productMarket, Member member) {
+        List<PersonalizedInfo> personalizedInfoList = personalizedInfoRepository.findByProductMarketAndMember(productMarket, member);
+        if (personalizedInfoList.size() != 1) {
+            throw new InternalServerException(ErrorCode.INTERNAL_SERVER);
+        }
+        PersonalizedInfo personalizedInfo = personalizedInfoList.get(0);
+
+        Product fakeProduct = productMarket.getProduct();
+        fakeProduct.maskWithPersonalizedInfo(personalizedInfo);
+
+        productMarket.maskWithPersonalizedInfo(personalizedInfo, fakeProduct);
+
+
         return DtoMapper.INSTANCE.toProductMarketResponseDto(
                 productMarket,
-                toProductResponseDto(productMarket.getProduct())
+                toProductResponseDto(productMarket.getProduct(), member)
         );
     }
 
-    public ProductResponseDto toProductResponseDto(Product product) {
+    public ProductResponseDto toProductResponseDto(Product product, Member member) {
         return DtoMapper.INSTANCE.toProductResponseDto(
                 product,
                 product.getProductIngredientJoinList()
@@ -96,35 +112,39 @@ public class DtoMapperUtil {
         );
     }
 
-    public ShopBasketResponseDto toShopBasketResponseDto(ShopBasket shopBasket) {
+    public ShopBasketResponseDto toShopBasketResponseDto(ShopBasket shopBasket, Member member) {
         return DtoMapper.INSTANCE.toShopBasketResponseDto(
                 shopBasket,
                 shopBasket.getShopBasketProductJoinList()
-                        .stream().map(this::toShopBasketProductJoinResponseDto).toList()
+                        .stream().map(shopBasketProductJoin -> {
+                            return toShopBasketProductJoinResponseDto(shopBasketProductJoin, member);
+                        }).toList()
         );
     }
 
-    public ShopBasketProductJoinResponseDto toShopBasketProductJoinResponseDto(ShopBasketProductJoin shopBasketProductJoin) {
+    public ShopBasketProductJoinResponseDto toShopBasketProductJoinResponseDto(ShopBasketProductJoin shopBasketProductJoin, Member member) {
         return DtoMapper.INSTANCE.toShopBasketProductJoinResponseDto(
                 shopBasketProductJoin,
-                toProductMarketResponseDto(shopBasketProductJoin.getProductMarket())
+                toProductMarketResponseDto(shopBasketProductJoin.getProductMarket(), member)
         );
     }
 
-    public ShopRecordResponseDto toShopRecordResponseDto(ShopRecord shopRecord) {
+    public ShopRecordResponseDto toShopRecordResponseDto(ShopRecord shopRecord, Member member) {
         return DtoMapper.INSTANCE.toShopRecordResponseDto(
                 shopRecord,
                 toProductMarketResponseDto(
-                        shopRecord.getProductMarket()
+                        shopRecord.getProductMarket(),
+                        member
                 )
         );
     }
 
-    public ViewRecordResponseDto toViewRecordResponseDto(ViewRecord viewRecord) {
+    public ViewRecordResponseDto toViewRecordResponseDto(ViewRecord viewRecord, Member member) {
         return DtoMapper.INSTANCE.toViewRecordResponseDto(
                 viewRecord,
                 toProductMarketResponseDto(
-                        viewRecord.getProductMarket()
+                        viewRecord.getProductMarket(),
+                        member
                 )
         );
     }

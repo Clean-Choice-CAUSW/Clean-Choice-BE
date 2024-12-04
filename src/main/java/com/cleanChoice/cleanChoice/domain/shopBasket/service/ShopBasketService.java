@@ -32,7 +32,8 @@ public class ShopBasketService {
     @Transactional
     public ShopBasketResponseDto createShopBasket(Member member, String basketName) {
         return dtoMapperUtil.toShopBasketResponseDto(
-                shopBasketRepository.save(ShopBasket.of(member, basketName))
+                shopBasketRepository.save(ShopBasket.of(member, basketName)),
+                member
         );
     }
 
@@ -51,7 +52,8 @@ public class ShopBasketService {
         ShopBasketProductJoin shopBasketProductJoin = ShopBasketProductJoin.of(shopBasket, productMarket);
 
         return dtoMapperUtil.toShopBasketProductJoinResponseDto(
-                shopBasketProductJoinRepository.save(shopBasketProductJoin)
+                shopBasketProductJoinRepository.save(shopBasketProductJoin),
+                member
         );
     }
 
@@ -63,7 +65,7 @@ public class ShopBasketService {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
-        return dtoMapperUtil.toShopBasketResponseDto(shopBasket);
+        return dtoMapperUtil.toShopBasketResponseDto(shopBasket, member);
     }
 
     public ShopBasketProductJoinResponseDto getShopBasketProduct(Member member, Long shopBasketProductJoinId) {
@@ -74,7 +76,7 @@ public class ShopBasketService {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
-        return dtoMapperUtil.toShopBasketProductJoinResponseDto(shopBasketProductJoin);
+        return dtoMapperUtil.toShopBasketProductJoinResponseDto(shopBasketProductJoin, member);
     }
 
     @Transactional
@@ -88,7 +90,7 @@ public class ShopBasketService {
 
         shopBasketProductJoinRepository.delete(shopBasketProductJoin);
 
-        return dtoMapperUtil.toShopBasketProductJoinResponseDto(shopBasketProductJoin);
+        return dtoMapperUtil.toShopBasketProductJoinResponseDto(shopBasketProductJoin, member);
     }
 
     @Transactional
@@ -105,7 +107,7 @@ public class ShopBasketService {
         shopBasketProductJoinRepository.deleteAll(shopBasketProductJoinList);
 
         return shopBasketProductJoinList.stream()
-                .map(dtoMapperUtil::toShopBasketProductJoinResponseDto)
+                .map(shopBasketProductJoin -> dtoMapperUtil.toShopBasketProductJoinResponseDto(shopBasketProductJoin, member))
                 .toList();
     }
 
@@ -120,14 +122,14 @@ public class ShopBasketService {
 
         shopBasketRepository.delete(shopBasket);
 
-        return dtoMapperUtil.toShopBasketResponseDto(shopBasket);
+        return dtoMapperUtil.toShopBasketResponseDto(shopBasket, member);
     }
 
     public List<ShopBasketResponseDto> getShopBasketList(Member member) {
         List<ShopBasket> shopBasketList = shopBasketRepository.findAllByMember(member);
 
         return shopBasketList.stream()
-                .map(dtoMapperUtil::toShopBasketResponseDto)
+                .map(shopBasket -> dtoMapperUtil.toShopBasketResponseDto(shopBasket, member))
                 .toList();
     }
 

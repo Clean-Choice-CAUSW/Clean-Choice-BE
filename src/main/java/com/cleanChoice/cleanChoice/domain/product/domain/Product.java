@@ -171,5 +171,21 @@ public class Product extends BaseEntity {
         this.productLabelStatementList.add(productLabelStatement);
     }
 
+    public void maskWithPersonalizedInfo(PersonalizedInfo personalizedInfo) {
+        this.name = personalizedInfo.getName();
+        this.brandName = personalizedInfo.getBrandName();
+        this.madeInCountry = personalizedInfo.getMadeInCountry();
+        this.englishNetContent = personalizedInfo.getEnglishNetContent();
+        this.koreanNetContent = personalizedInfo.getKoreanNetContent();
+        this.servingSize = personalizedInfo.getServingSize();
+        this.englishProductType = personalizedInfo.getEnglishProductType();
+        this.koreanProductType = personalizedInfo.getKoreanProductType();
+        this.englishSupplementForm = personalizedInfo.getEnglishSupplementForm();
+        this.koreanSupplementForm = personalizedInfo.getKoreanSupplementForm();
+        this.englishSuggestedUse = personalizedInfo.getEnglishSuggestedUse();
+        this.koreanSuggestedUse = personalizedInfo.getKoreanSuggestedUse();
+        this.englishOtherIngredients = personalizedInfo.getEnglishOtherIngredients();
+        this.koreanOtherIngredients = personalizedInfo.getKoreanOtherIngredients();
+    }
 
 }

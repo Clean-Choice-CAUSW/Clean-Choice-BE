@@ -56,14 +56,15 @@ public class ShopRecordService {
                                 member,
                                 productMarket
                         )
-                )
+                ),
+                member
         );
     }
 
     public Page<ShopRecordResponseDto> getShopRecordAllByPage(Member member, Pageable pageable) {
         Page<ShopRecord> shopRecordPage = shopRecordRepository.findAllByMember(member, pageable);
 
-        return shopRecordPage.map(dtoMapperUtil::toShopRecordResponseDto);
+        return shopRecordPage.map(shopRecord -> dtoMapperUtil.toShopRecordResponseDto(shopRecord, member));
     }
 
     public ShopRecordResponseDto getShopRecord(Member member, Long shopRecordId) {
@@ -74,7 +75,7 @@ public class ShopRecordService {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
-        return dtoMapperUtil.toShopRecordResponseDto(shopRecord);
+        return dtoMapperUtil.toShopRecordResponseDto(shopRecord, member);
     }
 
     @Transactional
@@ -88,7 +89,7 @@ public class ShopRecordService {
 
         shopRecordRepository.delete(shopRecord);
 
-        return dtoMapperUtil.toShopRecordResponseDto(shopRecord);
+        return dtoMapperUtil.toShopRecordResponseDto(shopRecord, member);
     }
 
     @Transactional

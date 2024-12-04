@@ -65,7 +65,7 @@ public class HomeService {
         if (!productMarketList.isEmpty()) {
             ProductMarket productMarket = productMarketList.get(0);
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE, member);
         }
 
         NameVectorWithDistanceDto nameVectorWithDistanceDto = null;
@@ -109,7 +109,7 @@ public class HomeService {
             );
             nameBrandNameVectorRepository.save(nameBrandNameVector);
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.LLM_ANALYZE);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.LLM_ANALYZE, member);
         }
         // ProductMarket에 대한 결과 없는 경우
         else if (nameVectorWithDistanceDto.getNameBrandNameVector().getProductMarket() == null) {
@@ -133,14 +133,15 @@ public class HomeService {
 
             return dtoMapperUtil.toAnalyzeResponseDto(
                     productMarket,
-                    AnalyzeType.DB_MAKE
+                    AnalyzeType.DB_MAKE,
+                    member
             );
         }
         // ProductMarket에 대한 결과 있는 경우
         else {
             ProductMarket productMarket = nameVectorWithDistanceDto.getNameBrandNameVector().getProductMarket();
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE, member);
         }
     }
 
@@ -158,7 +159,7 @@ public class HomeService {
             // view record 저장
             viewRecordService.createViewRecord(member, productMarket);
 
-            return dtoMapperUtil.toProductMarketResponseDto(productMarket);
+            return dtoMapperUtil.toProductMarketResponseDto(productMarket, member);
         }
         // 틀렸을 시 LLM 호출
         else {
@@ -174,7 +175,7 @@ public class HomeService {
                 nameBrandNameVectorRepository.delete(wrongNameBrandNameVector);
             }
 
-            productMarket = getProductMarketByLLMRequest(productMarket.getUrl(), productMarket.getProduct());
+            productMarket = getProductMarketByLLMRequest(productMarket.getUrl(), null);
 
             // view record 저장
             viewRecordService.createViewRecord(member, productMarket);
@@ -191,7 +192,7 @@ public class HomeService {
             );
             nameBrandNameVectorRepository.save(nameBrandNameVector);
 
-            return dtoMapperUtil.toProductMarketResponseDto(productMarket);
+            return dtoMapperUtil.toProductMarketResponseDto(productMarket, member);
         }
     }
 

@@ -19,11 +19,11 @@ public class ProductMarket extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "image_url", nullable = true, columnDefinition = "TEXT")
-    private String imageUrl;
-
     @Column(name = "market_name", nullable = false, columnDefinition = "TEXT")
     private String url;
+
+    @Column(name = "image_url", nullable = true, columnDefinition = "TEXT")
+    private String imageUrl;
 
     @Column(name = "price", nullable = true)
     private Long price;
@@ -61,6 +61,12 @@ public class ProductMarket extends BaseEntity {
 
     public void updateViewCount() {
         this.viewCount++;
+    }
+
+    public void maskWithPersonalizedInfo(PersonalizedInfo personalizedInfo, Product fakeProduct) {
+        this.price = personalizedInfo.getPrice();
+        this.priceUnit = personalizedInfo.getPriceUnit();
+        this.product = fakeProduct;
     }
 
 }

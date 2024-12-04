@@ -29,7 +29,7 @@ public class ViewRecordService {
     public List<ViewRecordResponseDto> getViewRecordList(Member member) {
         return viewRecordRepository.findByMemberOrderByCreatedAtDesc(member)
                 .stream()
-                .map(dtoMapperUtil::toViewRecordResponseDto)
+                .map(viewRecord -> dtoMapperUtil.toViewRecordResponseDto(viewRecord, member))
                 .toList();
     }
 
@@ -50,7 +50,8 @@ public class ViewRecordService {
                                 member,
                                 productMarket
                         )
-                )
+                ),
+                member
         );
     }
 
@@ -64,7 +65,7 @@ public class ViewRecordService {
 
         viewRecordRepository.delete(viewRecord);
 
-        return dtoMapperUtil.toViewRecordResponseDto(viewRecord);
+        return dtoMapperUtil.toViewRecordResponseDto(viewRecord, member);
     }
 
     @Transactional
@@ -74,7 +75,7 @@ public class ViewRecordService {
         viewRecordRepository.deleteAll(viewRecordList);
 
         return viewRecordList.stream()
-                .map(dtoMapperUtil::toViewRecordResponseDto)
+                .map(viewRecord -> dtoMapperUtil.toViewRecordResponseDto(viewRecord, member))
                 .toList();
     }
 
