@@ -35,7 +35,7 @@ public class NameBrandNameVector extends BaseEntity {
     @Array(length = 384) // MiniLM-L6-v2 dimensions
     private float[] brandNameVector;
 
-    public static NameBrandNameVector createWithProductMarket(
+    public static NameBrandNameVector createWithProduct(
             Product product,
             List<Float> nameVector,
             List<Float> brandNameVector

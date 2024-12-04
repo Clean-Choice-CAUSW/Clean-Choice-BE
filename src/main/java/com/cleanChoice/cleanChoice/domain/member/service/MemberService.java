@@ -1,5 +1,7 @@
 package com.cleanChoice.cleanChoice.domain.member.service;
 
+import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
+import com.cleanChoice.cleanChoice.domain.member.domain.Gender;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.domain.repository.MemberRepository;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.JwtTokenResponseDto;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,7 +33,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final RedisUtils redisUtils;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -131,6 +133,16 @@ public class MemberService {
         return toResponseDto(memberRepository.save(member));
     }
 
+    public String getAdvice(Member member, String question) {
+        int age = member.getAge();
+        Gender gender = member.getGender();
+        boolean isPregnant = member.getIsPregnant();
+
+        List<IntakeIngredient> intakeIngredientList = member.getIntakeIngredientList();
+
+        // TODO: 조언 관련 LLM 모델 연결 필요
+        return "temp advice";
+    }
 
     // private method
 

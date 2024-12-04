@@ -2,6 +2,7 @@ package com.cleanChoice.cleanChoice.domain.viewRecord.service;
 
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
+import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductMarketRepository;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.ViewRecord;
 import com.cleanChoice.cleanChoice.domain.viewRecord.domain.repository.ViewRecordRepository;
 import com.cleanChoice.cleanChoice.domain.viewRecord.dto.response.ViewRecordResponseDto;
@@ -23,6 +24,7 @@ public class ViewRecordService {
     private final ViewRecordRepository viewRecordRepository;
 
     private final DtoMapperUtil dtoMapperUtil;
+    private final ProductMarketRepository productMarketRepository;
 
     public List<ViewRecordResponseDto> getViewRecordList(Member member) {
         return viewRecordRepository.findByMemberOrderByCreatedAtDesc(member)
@@ -33,6 +35,9 @@ public class ViewRecordService {
 
     @Transactional
     public ViewRecordResponseDto createViewRecord(Member member, ProductMarket productMarket) {
+        productMarket.updateViewCount();
+        productMarketRepository.save(productMarket);
+
         List<ViewRecord> viewRecordList = viewRecordRepository.findByMemberOrderByCreatedAtDesc(member);
 
         if (viewRecordList.size() >= StaticValue.MAX_VIEW_RECORD_SIZE) {

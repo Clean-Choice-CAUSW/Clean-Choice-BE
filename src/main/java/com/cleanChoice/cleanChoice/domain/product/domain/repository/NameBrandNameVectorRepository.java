@@ -1,6 +1,7 @@
 package com.cleanChoice.cleanChoice.domain.product.domain.repository;
 
 import com.cleanChoice.cleanChoice.domain.product.domain.NameBrandNameVector;
+import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,4 +38,5 @@ public interface NameBrandNameVectorRepository extends JpaRepository<NameBrandNa
             @Param("target_brand_name_vector") String target_brand_name_vector
     );
 
+    Optional<NameBrandNameVector> findByProductMarket(ProductMarket productMarket);
 }

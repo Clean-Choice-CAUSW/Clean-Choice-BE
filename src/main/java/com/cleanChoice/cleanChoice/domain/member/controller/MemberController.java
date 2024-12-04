@@ -95,4 +95,14 @@ public class MemberController {
         return memberService.updateMember(customUserDetails.getMember(), updateMemberRequestDto);
     }
 
+    @GetMapping("/advice")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "유저 정보 기반 조언 조회(question null로 보낼 시 유저 기본 정보 토대로 조언, 있을 시, 질문 기반 답변)", description = "추천 정보를 조회합니다.")
+    public String getAdvice(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody(required = false) String question
+    ) {
+        return memberService.getAdvice(customUserDetails.getMember(), question);
+    }
+
 }

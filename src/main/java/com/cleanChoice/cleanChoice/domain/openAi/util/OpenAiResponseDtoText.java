@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ResponseDtoText {
+public enum OpenAiResponseDtoText {
     PRODUCT_MARKET(
             "class ProductMarketLLMResponseDto {\n" +
                     "@Schema(description = \"제품 영어명\", example = \"B-2 100mg\")\n" +

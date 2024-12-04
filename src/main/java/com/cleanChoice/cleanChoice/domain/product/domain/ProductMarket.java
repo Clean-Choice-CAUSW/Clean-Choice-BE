@@ -25,15 +25,15 @@ public class ProductMarket extends BaseEntity {
     @Column(name = "market_name", nullable = false, columnDefinition = "TEXT")
     private String url;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price", nullable = true)
     private Long price;
 
-    @Column(name = "price_unit", nullable = false)
+    @Column(name = "price_unit", nullable = true)
     private String priceUnit;
 
     @Column(name = "price_discount", nullable = false)
     @Builder.Default
-    private Long viewCount = 1L;
+    private Long viewCount = 0L;
 
     @Column(name = "view_count", nullable = false)
     @Builder.Default

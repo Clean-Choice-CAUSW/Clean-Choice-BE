@@ -3,6 +3,7 @@ package com.cleanChoice.cleanChoice.domain.home.controller;
 import com.cleanChoice.cleanChoice.domain.home.dto.response.AnalyzeResponseDto;
 import com.cleanChoice.cleanChoice.domain.home.service.HomeService;
 import com.cleanChoice.cleanChoice.domain.home.dto.request.AnalyzeRequestDto;
+import com.cleanChoice.cleanChoice.domain.product.dto.response.AnalyzeType;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,13 +62,14 @@ public class HomeController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "상품 URL DB 매치시 보내는 API",
             description = "상품 URL이 DB에 매치 후 맞았는지 틀렸는지 사용자의 선택 결과 재전송하는 API 입니다." +
-                    "사용자 선택이 틀렸다고 하면 LLM 분석 후 DB에 저장합니다.")
+                    "사용자 선택이 틀렸다고 하면 LLM 분석 후 DB에 저장합니다. DB_ANALYZE, DB_MAKE일 경우에만 보내야 합니다.")
     public ProductMarketResponseDto resultCorrect(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestHeader Long productMarketId,
-            @RequestHeader Boolean isCorrect
-    ) {
-        return homeService.resultCorrect(customUserDetails.getMember(), productMarketId, isCorrect);
+            @RequestHeader Boolean isCorrect,
+            @RequestHeader AnalyzeType analyzeType
+            ) {
+        return homeService.resultCorrect(customUserDetails.getMember(), productMarketId, isCorrect, analyzeType);
     }
 
 }

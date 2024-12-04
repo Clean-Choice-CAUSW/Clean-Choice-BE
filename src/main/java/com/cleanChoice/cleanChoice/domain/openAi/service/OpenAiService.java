@@ -5,7 +5,7 @@ import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductLabelStateme
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductMarketLLMResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.OpenAiRequestDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.OpenAiResponseDto;
-import com.cleanChoice.cleanChoice.domain.openAi.util.ResponseDtoText;
+import com.cleanChoice.cleanChoice.domain.openAi.util.OpenAiResponseDtoText;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanType;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanedIngredientInfo;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
@@ -14,6 +14,7 @@ import com.cleanChoice.cleanChoice.domain.product.domain.*;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import com.cleanChoice.cleanChoice.global.exceptions.InternalServerException;
+import com.cleanChoice.cleanChoice.global.util.URLValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LLMService {
+public class OpenAiService {
 
     @Value("${openai.api_key}")
     private String apiKey;
@@ -173,11 +174,11 @@ public class LLMService {
         OpenAiRequestDto.OpenAiMessageDto judgeMessage = this.buildMessage("user",
                 "Is this url health functional food e-commerce product detail page?Answer Only Y/N\n" + marketUrl);
         OpenAiRequestDto.OpenAiMessageDto productMarketMessage = this.buildMessage("user",
-                ResponseDtoText.PRODUCT_MARKET.getPrompt() + " URL:" + marketUrl + "\n" + ResponseDtoText.PRODUCT_MARKET.getText());
+                OpenAiResponseDtoText.PRODUCT_MARKET.getPrompt() + " URL:" + marketUrl + "\n" + OpenAiResponseDtoText.PRODUCT_MARKET.getText());
         OpenAiRequestDto.OpenAiMessageDto ingredientMessage = this.buildMessage("user",
-                ResponseDtoText.PRODUCT_INGREDIENT_JOIN.getPrompt() + " URL:" + marketUrl + "\n" + ResponseDtoText.PRODUCT_INGREDIENT_JOIN.getText());
+                OpenAiResponseDtoText.PRODUCT_INGREDIENT_JOIN.getPrompt() + " URL:" + marketUrl + "\n" + OpenAiResponseDtoText.PRODUCT_INGREDIENT_JOIN.getText());
         OpenAiRequestDto.OpenAiMessageDto labelMessage = this.buildMessage("user",
-                ResponseDtoText.PRODUCT_LABEL_STATEMENT.getPrompt() + " URL:" + marketUrl + "\n" + ResponseDtoText.PRODUCT_LABEL_STATEMENT.getText());
+                OpenAiResponseDtoText.PRODUCT_LABEL_STATEMENT.getPrompt() + " URL:" + marketUrl + "\n" + OpenAiResponseDtoText.PRODUCT_LABEL_STATEMENT.getText());
 
         String judgeResponse = requestToOpenAi(
                 buildRequest(headers, "gpt-4o-mini", List.of(judgeMessage), 0.7)
@@ -259,7 +260,7 @@ public class LLMService {
             throw new InternalServerException(ErrorCode.INTERNAL_SERVER, "Failed to get product market information.");
         }
 
-        Mono<Boolean> isImageUrlValid = validateImageUrl(productMarketLLMResponseDto.getImageUrl());
+        Mono<Boolean> isImageUrlValid = URLValidator.validateImageUrl(productMarketLLMResponseDto.getImageUrl());
 
         if (productMarketLLMResponseDto.getPrice() != null ^ productMarketLLMResponseDto.getPriceUnit() != null) {
             productMarketLLMResponseDto.setPrice(null);
@@ -271,18 +272,6 @@ public class LLMService {
         }
 
         return productMarketLLMResponseDto;
-    }
-
-    private Mono<Boolean> validateImageUrl(String imageUrl) {
-        WebClient webClient = WebClient.create();
-        return webClient.head()
-                .uri(imageUrl)
-                .exchangeToMono(clientResponse -> {
-                    HttpStatusCode statusCode = clientResponse.statusCode();
-                    String contentType = clientResponse.headers().contentType().map(MimeType::toString).orElse("");
-
-                    return Mono.just(statusCode.is2xxSuccessful() && contentType.startsWith("image/"));
-                }).onErrorResume(e -> Mono.just(false));
     }
 
 }
