@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class DataInputService {
         Page<Product> productPage;
 
         do {
+            LocalDateTime startTime = LocalDateTime.now();
             // 페이지 단위로 Product 데이터 조회
             productPage = productRepository.findAll(pageable);
             List<Product> productList = productPage.getContent();
@@ -85,7 +87,7 @@ public class DataInputService {
             // 다음 페이지로 이동
             pageable = productPage.nextPageable();
 
-            System.out.println("[Page #]: " + pageable.getPageNumber());
+            System.out.println("[Page #]: " + pageable.getPageNumber() + " / " + productPage.getTotalPages() + " - " + (LocalDateTime.now().getSecond() - startTime.getSecond()) + "s");
         } while (productPage.hasNext());
     }
 
