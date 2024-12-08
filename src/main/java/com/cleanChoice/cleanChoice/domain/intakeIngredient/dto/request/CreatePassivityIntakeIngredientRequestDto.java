@@ -14,7 +14,7 @@ public class CreatePassivityIntakeIngredientRequestDto {
     private String fakeName;
 
     @Schema(description = "복용량(nullable)", example = "100.0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Double amount;
+    private String amount;
 
     @Schema(description = "복용량 단위(nullable)", example = "mg", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String unit;

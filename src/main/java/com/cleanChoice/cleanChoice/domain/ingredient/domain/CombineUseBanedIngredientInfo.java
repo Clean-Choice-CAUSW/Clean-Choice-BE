@@ -26,4 +26,16 @@ public class CombineUseBanedIngredientInfo extends BaseEntity {
     @Column(name = "description", nullable = true)
     private String description;
 
+    public static CombineUseBanedIngredientInfo of(
+            Ingredient ingredient,
+            Ingredient combineIngredient,
+            String description
+    ) {
+        return CombineUseBanedIngredientInfo.builder()
+                .ingredient(ingredient)
+                .combineIngredient(combineIngredient)
+                .description(description)
+                .build();
+    }
+
 }

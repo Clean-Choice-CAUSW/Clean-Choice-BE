@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.product.domain;
 
+import com.cleanChoice.cleanChoice.domain.dataInput.dto.CreateProductIngredientJoinRequestDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -23,7 +24,7 @@ public class ProductIngredientJoin extends BaseEntity {
 
     // 1회 복용양(ex: 1)
     @Column(name = "serving_size", nullable = true)
-    private Double servingSize;
+    private String servingSize;
 
     // 1회 복용양 단위(ex: Tablet(s))
     @Column(name = "serving_unit", nullable = true)
@@ -31,7 +32,7 @@ public class ProductIngredientJoin extends BaseEntity {
 
     // 복용 당 성분 섭취량(ex: 1000)
     @Column(name = "amount_per_serving", nullable = true)
-    private Double amountPerServing;
+    private String amountPerServing;
 
     // 복용 당 성분 섭취량 단위(ex: mg)
     @Column(name = "amount_per_serving_unit", nullable = true)
@@ -39,7 +40,7 @@ public class ProductIngredientJoin extends BaseEntity {
 
     // 일일 권장 섭취량 대비 비율(%, ex: 5882)
     @Column(name = "daily_value_per_serving", nullable = true)
-    private Double dailyValuePerServing;
+    private String dailyValuePerServing;
 
     // 일일 권장 섭취량 기준 그룹(ex: Adults and children 4 or more years of age)
     @Column(name = "daily_value_target_group", nullable = true)
@@ -51,11 +52,11 @@ public class ProductIngredientJoin extends BaseEntity {
     public static ProductIngredientJoin of(
             Product product,
             Ingredient ingredient,
-            Double servingSize,
+            String servingSize,
             String servingUnit,
-            Double amountPerServing,
+            String amountPerServing,
             String amountPerServingUnit,
-            Double dailyValuePerServing,
+            String dailyValuePerServing,
             String englishDailyValueTargetGroup,
             String koreanDailyValueTargetGroup
     ) {
@@ -69,6 +70,24 @@ public class ProductIngredientJoin extends BaseEntity {
                 .dailyValuePerServing(dailyValuePerServing)
                 .englishDailyValueTargetGroup(englishDailyValueTargetGroup)
                 .koreanDailyValueTargetGroup(koreanDailyValueTargetGroup)
+                .build();
+    }
+
+    public static ProductIngredientJoin from(
+            Product product,
+            Ingredient ingredient,
+            CreateProductIngredientJoinRequestDto createProductIngredientJoinRequestDto
+    ) {
+        return ProductIngredientJoin.builder()
+                .product(product)
+                .ingredient(ingredient)
+                .servingSize(createProductIngredientJoinRequestDto.getServingSize())
+                .servingUnit(createProductIngredientJoinRequestDto.getServingUnit())
+                .amountPerServing(createProductIngredientJoinRequestDto.getAmountPerServing())
+                .amountPerServingUnit(createProductIngredientJoinRequestDto.getAmountPerServingUnit())
+                .dailyValuePerServing(createProductIngredientJoinRequestDto.getDailyValuePerServing())
+                .englishDailyValueTargetGroup(createProductIngredientJoinRequestDto.getEnglishDailyValueTargetGroup())
+                .koreanDailyValueTargetGroup(createProductIngredientJoinRequestDto.getKoreanDailyValueTargetGroup())
                 .build();
     }
 

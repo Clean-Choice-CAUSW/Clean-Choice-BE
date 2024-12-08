@@ -1,11 +1,13 @@
 package com.cleanChoice.cleanChoice.domain.ingredient.domain;
 
+import com.cleanChoice.cleanChoice.domain.dataInput.dto.CreateIngredientRequestDto;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Builder(access = AccessLevel.PROTECTED)
@@ -56,6 +58,24 @@ public class Ingredient extends BaseEntity {
                 .koreanName(koreanName)
                 .effectiveness(effectiveness)
                 .build();
+    }
+
+    public static Ingredient from(CreateIngredientRequestDto createIngredientRequestDto) {
+        return Ingredient.builder()
+                .englishCategory(createIngredientRequestDto.getEnglishCategory())
+                .koreanCategory(createIngredientRequestDto.getKoreanCategory())
+                .englishName(createIngredientRequestDto.getIngredientName())
+                .effectiveness(createIngredientRequestDto.getEffectiveness())
+                .isClearanceBaned(createIngredientRequestDto.getIsClearanceBaned())
+                .build();
+    }
+
+    public void updateFrom(CreateIngredientRequestDto createIngredientRequestDto) {
+        this.englishCategory = Objects.equals(createIngredientRequestDto.getEnglishCategory(), "") ? this.englishCategory : createIngredientRequestDto.getEnglishCategory();
+        this.koreanCategory = Objects.equals(createIngredientRequestDto.getKoreanCategory(), "") ? this.koreanCategory : createIngredientRequestDto.getKoreanCategory();
+        this.englishName = Objects.equals(createIngredientRequestDto.getIngredientName(), "") ? this.englishName : createIngredientRequestDto.getIngredientName();
+        this.effectiveness = Objects.equals(createIngredientRequestDto.getEffectiveness(), "") ? this.effectiveness : createIngredientRequestDto.getEffectiveness();
+        this.isClearanceBaned = Objects.equals(createIngredientRequestDto.getIsClearanceBaned(), null) ? this.isClearanceBaned : createIngredientRequestDto.getIsClearanceBaned();
     }
 
     public void updateIsClearanceBaned(Boolean isClearanceBaned) {

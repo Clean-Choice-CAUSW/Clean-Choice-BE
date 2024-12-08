@@ -18,4 +18,12 @@ public enum StatementType {
 
     private final String value;
 
+    public static StatementType of(String value) {
+        for (StatementType statementType : StatementType.values()) {
+            if (statementType.getValue().equals(value)) {
+                return statementType;
+            }
+        }
+        return OTHER;
+    }
 }

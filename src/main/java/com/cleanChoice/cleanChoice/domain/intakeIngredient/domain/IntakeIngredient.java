@@ -26,7 +26,7 @@ public class IntakeIngredient extends BaseEntity {
     private String fakeName;
 
     @Column(name = "amount", nullable = true)
-    private Double amount;
+    private String amount;
 
     @Column(name = "unit", nullable = true)
     private String unit;
@@ -34,7 +34,7 @@ public class IntakeIngredient extends BaseEntity {
     public static IntakeIngredient createWithIngredient(
             Member member,
             Ingredient ingredient,
-            Double amount,
+            String amount,
             String unit
     ) {
         return IntakeIngredient.builder()
@@ -48,7 +48,7 @@ public class IntakeIngredient extends BaseEntity {
     public static IntakeIngredient createWithFakeName(
             Member member,
             String fakeName,
-            Double amount,
+            String amount,
             String unit
     ) {
         return IntakeIngredient.builder()

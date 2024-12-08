@@ -95,6 +95,7 @@ public interface DtoMapper {
     );
 
     @CommonEntityMappings
+    @Mapping(target = "productId", source = "entity.product.id")
     @Mapping(target = "statementTypeStringValue", source = "statementType", qualifiedByName = "statementTypeStringValue")
     ProductLabelStatementResponseDto toProductLabelStatementResponseDto(ProductLabelStatement entity);
 
@@ -119,6 +120,7 @@ public interface DtoMapper {
     @Mapping(target = "ingredientId", source = "entity.ingredient.id")
     @Mapping(target = "ingredientEnglishName", source = "entity.ingredient.englishName")
     @Mapping(target = "ingredientKoreanName", source = "entity.ingredient.koreanName")
+    @Mapping(target = "combineIngredientId", source = "entity.combineIngredient.id")
     @Mapping(target = "combineIngredientEnglishName", source = "entity.ingredient.englishName")
     @Mapping(target = "combineIngredientKoreanName", source = "entity.ingredient.koreanName")
     CombineUseBanedIngredientInfoResponseDto toCombineUseBanedIngredientInfoResponseDto(

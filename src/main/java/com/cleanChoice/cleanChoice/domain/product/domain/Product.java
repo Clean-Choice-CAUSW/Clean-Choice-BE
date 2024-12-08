@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.product.domain;
 
+import com.cleanChoice.cleanChoice.domain.dataInput.dto.CreateProductDto;
 import com.cleanChoice.cleanChoice.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,7 +43,7 @@ public class Product extends BaseEntity {
     private String brandName;
 
     // 제조국(한글)
-    @Column(name = "made_in_country", nullable = false)
+    @Column(name = "made_in_country", nullable = true)
     private String madeInCountry;
 
     // 제품 총량 (ex: 100 Easy To Swallow Coated Tablet(s))
@@ -71,17 +72,17 @@ public class Product extends BaseEntity {
     private String koreanSupplementForm;
 
     // 권장 복용법 (ex: DIRECTIONS: For adults, take one (1) to two (2) tablets daily, preferably with a meal.)
-    @Column(name = "english_suggested_use", nullable = true)
+    @Column(name = "english_suggested_use", nullable = true, columnDefinition = "TEXT")
     private String englishSuggestedUse;
 
-    @Column(name = "korean_suggested_use", nullable = true)
+    @Column(name = "korean_suggested_use", nullable = true, columnDefinition = "TEXT")
     private String koreanSuggestedUse;
 
     // 이외 성분 (ex: Dicalcium Phosphate, Vegetable Cellulose, Croscarmellose, Vegetable Magnesium Stearate, Silica, Vegetable Cellulose Coating)
-    @Column(name = "english_other_ingredients", nullable = true)
+    @Column(name = "english_other_ingredients", nullable = true, columnDefinition = "TEXT")
     private String englishOtherIngredients;
 
-    @Column(name = "korean_other_ingredients", nullable = true)
+    @Column(name = "korean_other_ingredients", nullable = true, columnDefinition = "TEXT")
     private String koreanOtherIngredients;
 
     // 라벨 문구
@@ -127,6 +128,27 @@ public class Product extends BaseEntity {
                 .build();
     }
 
+    public static Product from(CreateProductDto createProductDto) {
+        return Product.of(
+                createProductDto.getDsldId(),
+                createProductDto.getDsldUrl(),
+                createProductDto.getProductName(),
+                createProductDto.getBrandName(),
+                createProductDto.getCountry(),
+                createProductDto.getEnglishNetContent(),
+                createProductDto.getKoreanNetContent(),
+                createProductDto.getServingSize(),
+                createProductDto.getEnglishProductType(),
+                createProductDto.getKoreanProductType(),
+                createProductDto.getEnglishSupplementForm(),
+                createProductDto.getKoreanSupplementForm(),
+                createProductDto.getEnglishSuggestedUse(),
+                createProductDto.getKoreanSuggestedUse(),
+                createProductDto.getOtherIngredients(),
+                ""
+        );
+    }
+
     public void update(
             String name,
             String brandName,
@@ -157,6 +179,22 @@ public class Product extends BaseEntity {
         this.koreanSuggestedUse = koreanSuggestedUse;
         this.englishOtherIngredients = englishOtherIngredients;
         this.koreanOtherIngredients = koreanOtherIngredients;
+    }
+
+    public void updateFrom(CreateProductDto createProductDto) {
+        this.name = createProductDto.getProductName().isBlank() ? this.name : createProductDto.getProductName();
+        this.brandName = createProductDto.getBrandName().isBlank() ? this.brandName : createProductDto.getBrandName();
+        this.madeInCountry = createProductDto.getCountry().isBlank() ? this.madeInCountry : createProductDto.getCountry();
+        this.englishNetContent = createProductDto.getEnglishNetContent().isBlank() ? this.englishNetContent : createProductDto.getEnglishNetContent();
+        this.koreanNetContent = createProductDto.getKoreanNetContent().isBlank() ? this.koreanNetContent : createProductDto.getKoreanNetContent();
+        this.servingSize = createProductDto.getServingSize().isBlank() ? this.servingSize : createProductDto.getServingSize();
+        this.englishProductType = createProductDto.getEnglishProductType().isBlank() ? this.englishProductType : createProductDto.getEnglishProductType();
+        this.koreanProductType = createProductDto.getKoreanProductType().isBlank() ? this.koreanProductType : createProductDto.getKoreanProductType();
+        this.englishSupplementForm = createProductDto.getEnglishSupplementForm().isBlank() ? this.englishSupplementForm : createProductDto.getEnglishSupplementForm();
+        this.koreanSupplementForm = createProductDto.getKoreanSupplementForm().isBlank() ? this.koreanSupplementForm : createProductDto.getKoreanSupplementForm();
+        this.englishSuggestedUse = createProductDto.getEnglishSuggestedUse().isBlank() ? this.englishSuggestedUse : createProductDto.getEnglishSuggestedUse();
+        this.koreanSuggestedUse = createProductDto.getKoreanSuggestedUse().isBlank() ? this.koreanSuggestedUse : createProductDto.getKoreanSuggestedUse();
+        this.englishOtherIngredients = createProductDto.getOtherIngredients().isBlank() ? this.englishOtherIngredients : createProductDto.getOtherIngredients();
     }
 
     public void addProductMarket(ProductMarket productMarket) {

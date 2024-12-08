@@ -78,7 +78,7 @@ public class FlaskApiService {
 
         // Flask API 호출
         ResponseEntity<EmbResponseDto[]> response = restTemplate.exchange(
-                flaskUrl,
+                flaskUrl + "/embed",
                 HttpMethod.POST,
                 requestEntity,
                 EmbResponseDto[].class // 응답 형식을 배열로 처리
