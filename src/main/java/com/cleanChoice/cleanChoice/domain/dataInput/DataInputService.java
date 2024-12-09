@@ -275,11 +275,11 @@ public class DataInputService {
 
         for (CreateProductIngredientJoinRequestDto createProductIngredientJoinRequestDto : createProductIngredientJoinRequestDtoList) {
             List<Product> productList = productRepository.findByDsldId(createProductIngredientJoinRequestDto.getDsldId());
-            if (productList.isEmpty()) throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST);
-            else if (productList.size() > 1) throw new BadRequestException(ErrorCode.ROW_ALREADY_EXIST);
+            if (productList.size() != 1) continue;
 
             Ingredient ingredient = ingredientRepository.findByEnglishName(createProductIngredientJoinRequestDto.getIngredientName())
-                    .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
+                    .orElse(null);
+            if (ingredient == null) continue;
 
             productIngredientJoinList.add(
                     ProductIngredientJoin.from(
