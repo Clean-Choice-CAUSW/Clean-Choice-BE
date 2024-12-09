@@ -16,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "ingredient",
 indexes = {
-        @Index(name = "ingredient_english_name_index", columnList = "idx_english_name")
+        @Index(name = "idx_english_name", columnList = "name")
 })
 public class Ingredient extends BaseEntity {
 
