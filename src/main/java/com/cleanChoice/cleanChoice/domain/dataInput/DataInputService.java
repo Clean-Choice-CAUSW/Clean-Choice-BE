@@ -18,6 +18,7 @@ import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductLabel
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductRepository;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +46,8 @@ public class DataInputService {
     private final ProductIngredientJoinRepository productIngredientJoinRepository;
     private final BanedIngredientInfoRepository banedIngredientInfoRepository;
     private final CombineUseBanedIngredientRepository combineUseBanedIngredientRepository;
+
+    private final EntityManager entityManager;
 
     @Transactional
     public void makeNameBrandNameVector() {
@@ -84,11 +89,42 @@ public class DataInputService {
                 nameBrandNameVectorRepository.saveAll(nameBrandNameVectorList);
             }
 
+            try {
+                System.out.println(
+                        "[Page #]: " + pageable.getPageNumber() + " / " + productPage.getTotalPages() +
+                                " - " + (LocalDateTime.now().getSecond() - startTime.getSecond()) + "s");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
             // 다음 페이지로 이동
             pageable = productPage.nextPageable();
-
-            System.out.println("[Page #]: " + pageable.getPageNumber() + " / " + productPage.getTotalPages() + " - " + (LocalDateTime.now().getSecond() - startTime.getSecond()) + "s");
         } while (productPage.hasNext());
+    }
+
+    @Transactional
+    public void mergeDuplicateNameBrandNameVectors() {
+        List<NameBrandNameVector> allVectorList = nameBrandNameVectorRepository.findAll();
+        Map<Long, NameBrandNameVector> uniqueVectors = new HashMap<>();
+        List<Long> duplicateVectorIds = new ArrayList<>();
+
+        for (NameBrandNameVector vector : allVectorList) {
+            Long productId = vector.getProduct().getId();
+            if (uniqueVectors.containsKey(productId)) {
+                duplicateVectorIds.add(vector.getId()); // 삭제할 ID만 수집
+            } else {
+                uniqueVectors.put(productId, vector);
+            }
+        }
+        System.out.println("uniqueVectors.size(): " + uniqueVectors.size());
+
+        if (!duplicateVectorIds.isEmpty()) {
+            // DELETE 쿼리 실행
+            entityManager.createQuery(
+                            "DELETE FROM NameBrandNameVector v WHERE v.id IN :ids")
+                    .setParameter("ids", duplicateVectorIds)
+                    .executeUpdate();
+        }
     }
 
     @Transactional
@@ -186,6 +222,33 @@ public class DataInputService {
         }
 
         if (!productLabelStatementList.isEmpty()) productLabelStatementRepository.saveAll(productLabelStatementList);
+    }
+
+    @Transactional
+    public void mergeDuplicateIngredient() {
+        List<Ingredient> ingredientList = ingredientRepository.findAll();
+        Map<String, Ingredient> uniqueIngredients = new HashMap<>();
+        List<Long> duplicateIngredientId = new ArrayList<>();
+
+        for (Ingredient ingredient : ingredientList) {
+            String ingredientName = ingredient.getEnglishName();
+            if (uniqueIngredients.containsKey(ingredientName)) {
+                duplicateIngredientId.add(ingredient.getId());
+            } else {
+                uniqueIngredients.put(ingredientName, ingredient);
+            }
+        }
+
+        if (!duplicateIngredientId.isEmpty()) {
+            int batchSize = 50000; // 배치 크기 설정 (DB에 따라 조정 가능)
+            for (int i = 0; i < duplicateIngredientId.size(); i += batchSize) {
+                List<Long> batch = duplicateIngredientId.subList(i, Math.min(i + batchSize, duplicateIngredientId.size()));
+                entityManager.createQuery(
+                                "DELETE FROM Ingredient i WHERE i.id IN :ids")
+                        .setParameter("ids", batch)
+                        .executeUpdate();
+            }
+        }
     }
 
     @Transactional

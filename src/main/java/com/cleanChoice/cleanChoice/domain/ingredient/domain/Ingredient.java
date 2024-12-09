@@ -40,7 +40,7 @@ public class Ingredient extends BaseEntity {
     @Builder.Default
     private Boolean isClearanceBaned = false;
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST })
     @Builder.Default
     private List<BanedIngredientInfo> banedIngredientInfoList = new ArrayList<>();
 

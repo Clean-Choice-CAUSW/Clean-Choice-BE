@@ -13,7 +13,7 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     @Query(value = "SELECT *" +
             "FROM ingredient " +
-            "WHERE english_name = :name OR korean_name = :name",
+            "WHERE name = :name OR korean_name = :name",
             nativeQuery = true
     )
     Optional<Ingredient> findByName(
