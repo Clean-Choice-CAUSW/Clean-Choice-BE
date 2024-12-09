@@ -20,6 +20,7 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
             @Param("name") String name
     );
 
+
     Optional<Ingredient> findByEnglishName(String englishName);
 
     Optional<Ingredient> findByKoreanName(String koreanName);

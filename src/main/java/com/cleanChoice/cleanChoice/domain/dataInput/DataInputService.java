@@ -278,7 +278,7 @@ public class DataInputService {
             if (productList.isEmpty()) throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST);
             else if (productList.size() > 1) throw new BadRequestException(ErrorCode.ROW_ALREADY_EXIST);
 
-            Ingredient ingredient = ingredientRepository.findByName(createProductIngredientJoinRequestDto.getIngredientName())
+            Ingredient ingredient = ingredientRepository.findByEnglishName(createProductIngredientJoinRequestDto.getIngredientName())
                     .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
             productIngredientJoinList.add(

@@ -14,7 +14,10 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "ingredient")
+@Table(name = "ingredient",
+indexes = {
+        @Index(name = "ingredient_english_name_index", columnList = "idx_english_name")
+})
 public class Ingredient extends BaseEntity {
 
     @Column(name = "english_category", nullable = true)
