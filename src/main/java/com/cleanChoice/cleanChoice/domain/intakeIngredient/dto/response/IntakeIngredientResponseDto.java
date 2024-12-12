@@ -26,7 +26,7 @@ public class IntakeIngredientResponseDto {
     private String fakeName;
 
     @Schema(description = "복용량(nullable)", example = "100.0")
-    private Double amount;
+    private String amount;
 
     @Schema(description = "복용량 단위(nullable)", example = "mg")
     private String unit;
