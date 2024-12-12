@@ -3,6 +3,7 @@ package com.cleanChoice.cleanChoice.domain.shopRecord.service;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.repository.IntakeIngredientRepository;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
+import com.cleanChoice.cleanChoice.domain.member.domain.repository.MemberRepository;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductIngredientJoin;
 import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductMarketRepository;
@@ -13,6 +14,7 @@ import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,9 +32,12 @@ public class ShopRecordService {
 
     private final DtoMapperUtil dtoMapperUtil;
     private final IntakeIngredientRepository intakeIngredientRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ShopRecordResponseDto createShopRecord(Member member, Long productMarketId) {
+        member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
+
         ProductMarket productMarket= productMarketRepository.findById(productMarketId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
