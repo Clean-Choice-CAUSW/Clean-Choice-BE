@@ -75,7 +75,7 @@ public class IntakeIngredientService {
         IntakeIngredient intakeIngredient = intakeIngredientRepository.findById(intakeIngredientId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!intakeIngredient.getMember().equals(member)) {
+        if (!intakeIngredient.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 

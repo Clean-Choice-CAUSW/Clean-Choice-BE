@@ -59,7 +59,7 @@ public class ViewRecordService {
     public ViewRecordResponseDto deleteViewRecord(Member member, Long viewRecordId) {
         ViewRecord viewRecord = viewRecordRepository.findById(viewRecordId).orElseThrow();
 
-        if (!viewRecord.getMember().equals(member)) {
+        if (!viewRecord.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 

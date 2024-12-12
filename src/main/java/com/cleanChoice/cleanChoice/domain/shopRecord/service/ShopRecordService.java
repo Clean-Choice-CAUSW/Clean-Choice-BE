@@ -71,7 +71,7 @@ public class ShopRecordService {
         ShopRecord shopRecord = shopRecordRepository.findById(shopRecordId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopRecord.getMember().equals(member)) {
+        if (!shopRecord.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
@@ -83,7 +83,7 @@ public class ShopRecordService {
         ShopRecord shopRecord = shopRecordRepository.findById(shopRecordId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopRecord.getMember().equals(member)) {
+        if (!shopRecord.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 

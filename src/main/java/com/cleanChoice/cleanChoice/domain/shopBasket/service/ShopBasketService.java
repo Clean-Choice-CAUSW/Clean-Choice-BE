@@ -42,7 +42,7 @@ public class ShopBasketService {
         ShopBasket shopBasket = shopBasketRepository.findById(shopBasketId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopBasket.getMember().equals(member)) {
+        if (!shopBasket.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
@@ -61,7 +61,7 @@ public class ShopBasketService {
         ShopBasket shopBasket = shopBasketRepository.findById(shopBasketId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopBasket.getMember().equals(member)) {
+        if (!shopBasket.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
@@ -72,7 +72,7 @@ public class ShopBasketService {
         ShopBasketProductJoin shopBasketProductJoin = shopBasketProductJoinRepository.findById(shopBasketProductJoinId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopBasketProductJoin.getShopBasket().getMember().equals(member)) {
+        if (!shopBasketProductJoin.getShopBasket().getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
@@ -84,7 +84,7 @@ public class ShopBasketService {
         ShopBasketProductJoin shopBasketProductJoin = shopBasketProductJoinRepository.findById(shopBasketProductJoinId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopBasketProductJoin.getShopBasket().getMember().equals(member)) {
+        if (!shopBasketProductJoin.getShopBasket().getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
@@ -116,7 +116,7 @@ public class ShopBasketService {
         ShopBasket shopBasket = shopBasketRepository.findById(shopBasketId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
-        if (!shopBasket.getMember().equals(member)) {
+        if (!shopBasket.getMember().getId().equals(member.getId())) {
             throw new BadRequestException(ErrorCode.API_NOT_ACCESSIBLE);
         }
 
