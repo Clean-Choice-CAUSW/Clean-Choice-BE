@@ -1,6 +1,8 @@
 package com.cleanChoice.cleanChoice.domain.product.controller;
 
+import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
 import com.cleanChoice.cleanChoice.domain.product.dto.request.PersonalizedInfoRequestDto;
+import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductResponseDto;
 import com.cleanChoice.cleanChoice.domain.product.service.ProductService;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetails;
@@ -19,14 +21,24 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/{productMarketId}")
+    @GetMapping("/product-market/{productMarketId}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "마켓 등록된 상품 조회", description = "상품을 조회합니다. 조회시 조회 카운트가 증가합니다.")
-    public ProductResponseDto getProductMarket(
+    @Operation(summary = "마켓 등록된 상품 조회", description = "마켓 등록된 상품을 조회합니다. 조회시 조회 카운트가 증가합니다.")
+    public ProductMarketResponseDto getProductMarket(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long productMarketId
     ) {
-        return productService.getProduct(customUserDetails.getMember(), productMarketId);
+        return productService.getProductMarket(customUserDetails.getMember(), productMarketId);
+    }
+
+    @GetMapping("/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "상품 조회", description = "상품을 조회합니다. 조회시 조회 카운트가 증가합니다.")
+    public ProductResponseDto getProduct(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long productId
+    ) {
+        return productService.getProduct(customUserDetails.getMember(), productId);
     }
 
     @GetMapping("/search/name")
@@ -39,10 +51,10 @@ public class ProductController {
         return productService.searchProductByName(customUserDetails.getMember(), name);
     }
 
-    @PostMapping("/masking")
+    @PostMapping("/product-market/masking")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "사용자화 정보 마스킹 API", description = "사용자화 정보 마스킹 API")
-    public ProductResponseDto maskingProduct(
+    public ProductMarketResponseDto maskingProduct(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestHeader Long productMarketId,
             @RequestBody PersonalizedInfoRequestDto personalizedInfoRequestDto
@@ -50,10 +62,10 @@ public class ProductController {
         return productService.makingProduct(customUserDetails.getMember(), productMarketId, personalizedInfoRequestDto);
     }
 
-    @DeleteMapping("/masking")
+    @DeleteMapping("/product-market/masking")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "사용자화 정보 삭제 API", description = "사용자화 정보 삭제 API")
-    public ProductResponseDto deleteMaskingProduct(
+    public ProductMarketResponseDto deleteMaskingProduct(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestHeader Long productMarketId
     ) {

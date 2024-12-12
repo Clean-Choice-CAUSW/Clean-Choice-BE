@@ -7,6 +7,7 @@ import com.cleanChoice.cleanChoice.domain.product.domain.repository.Personalized
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductMarketRepository;
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductRepository;
 import com.cleanChoice.cleanChoice.domain.product.dto.request.PersonalizedInfoRequestDto;
+import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductResponseDto;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
@@ -27,6 +28,14 @@ public class ProductService {
     private final DtoMapperUtil dtoMapperUtil;
     private final ProductMarketRepository productMarketRepository;
 
+    public ProductMarketResponseDto getProductMarket(Member member, Long productMarketId) {
+        return dtoMapperUtil.toProductMarketResponseDto(
+                productMarketRepository.findById(productMarketId)
+                        .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST)),
+                member
+        );
+    }
+
     public ProductResponseDto getProduct(Member member, Long productId) {
         return dtoMapperUtil.toProductResponseDto(
                 productRepository.findById(productId)
@@ -44,7 +53,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto makingProduct(
+    public ProductMarketResponseDto makingProduct(
             Member member,
             Long productMarketId,
             PersonalizedInfoRequestDto personalizedInfoRequestDto
@@ -65,14 +74,14 @@ public class ProductService {
 
         personalizedInfoRepository.save(personalizedInfo);
 
-        return dtoMapperUtil.toProductResponseDto(
-                productMarket.getProduct(),
+        return dtoMapperUtil.toProductMarketResponseDto(
+                productMarket,
                 member
         );
     }
 
     @Transactional
-    public ProductResponseDto deleteMaskingProduct(Member member, Long productMarketId) {
+    public ProductMarketResponseDto deleteMaskingProduct(Member member, Long productMarketId) {
         ProductMarket productMarket = productMarketRepository.findById(productMarketId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
 
@@ -81,8 +90,8 @@ public class ProductService {
                 member
         ));
 
-        return dtoMapperUtil.toProductResponseDto(
-                productMarket.getProduct(),
+        return dtoMapperUtil.toProductMarketResponseDto(
+                productMarket,
                 member
         );
     }
