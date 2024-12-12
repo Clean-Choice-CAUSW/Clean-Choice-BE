@@ -26,7 +26,7 @@ public class IngredientController {
         return ingredientService.getIngredientById(ingredientId);
     }
 
-    @GetMapping("/search/name")
+    @PostMapping("/search/name")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "성분 이름으로 검색(영어, 한글 상관 없음)", description = "성분 이름으로 성분을 검색합니다.")
     public IngredientResponseDto searchIngredientByName(
@@ -35,7 +35,7 @@ public class IngredientController {
         return ingredientService.searchIngredientByName(searchIngredientRequestDto.getIngredientName());
     }
 
-    @GetMapping("/search/name/part")
+    @PostMapping("/search/name/part")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "성분 일부만 입력해도 검색(영어, 한글 상관 없음)", description = "성분을 일부만 입력해도 해당 스트링이 이름에 들어있는 성분 검색하는 API")
     public List<IngredientResponseDto> searchIngredientByNamePart(
