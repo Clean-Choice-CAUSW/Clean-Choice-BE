@@ -49,8 +49,8 @@ public class IntakeIngredientService {
                             member,
                             ingredientRepository.findById(createIntakeIngredientRequestDto.getIngredientId())
                                     .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST)),
-                            createIntakeIngredientRequestDto.getAmount(),
-                            createIntakeIngredientRequestDto.getUnit()
+                            null,
+                            null
                     )
             )
         );

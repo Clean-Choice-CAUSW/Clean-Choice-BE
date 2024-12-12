@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.ingredient.controller;
 
+import com.cleanChoice.cleanChoice.domain.ingredient.dto.request.SearchIngredientRequestDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.dto.response.IngredientResponseDto;
 import com.cleanChoice.cleanChoice.domain.ingredient.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,18 +30,18 @@ public class IngredientController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "성분 이름으로 검색(영어, 한글 상관 없음)", description = "성분 이름으로 성분을 검색합니다.")
     public IngredientResponseDto searchIngredientByName(
-            @RequestParam String name
+            @RequestBody SearchIngredientRequestDto searchIngredientRequestDto
     ) {
-        return ingredientService.searchIngredientByName(name);
+        return ingredientService.searchIngredientByName(searchIngredientRequestDto.getIngredientName());
     }
 
     @GetMapping("/search/name/part")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "성분 일부만 입력해도 검색(영어, 한글 상관 없음)", description = "성분을 일부만 입력해도 해당 스트링이 이름에 들어있는 성분 검색하는 API")
     public List<IngredientResponseDto> searchIngredientByNamePart(
-            @RequestParam String name
+            @RequestBody SearchIngredientRequestDto searchIngredientRequestDto
     ) {
-        return ingredientService.searchIngredientByNamePart(name);
+        return ingredientService.searchIngredientByNamePart(searchIngredientRequestDto.getIngredientName());
     }
 
 }
