@@ -2,6 +2,7 @@ package com.cleanChoice.cleanChoice.domain.member.service;
 
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
+import com.cleanChoice.cleanChoice.domain.member.domain.Gender;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.domain.repository.MemberRepository;
 import com.cleanChoice.cleanChoice.domain.member.dto.request.*;
@@ -162,10 +163,21 @@ public class MemberService {
             selectIngredientListString = selectIngredientNameString.stream().toList().toString();
         }
 
+        int age = member.getAge();
+        Gender gender = member.getGender();
+        Boolean isPregnant = member.getIsPregnant();
+
+        if (!getAdviceRequestDto.getIsCurrentMember()) {
+            age = getAdviceRequestDto.getAge();
+            gender = getAdviceRequestDto.getGender();
+            isPregnant = getAdviceRequestDto.getIsPregnant();
+            intakeIngredientListString = getAdviceRequestDto.toString();
+        }
+
         return openAiService.getAdvice(
-                member.getAge(),
-                member.getGender(),
-                member.getIsPregnant(),
+                age,
+                gender,
+                isPregnant,
                 intakeIngredientListString,
                 selectIngredientListString,
                 getAdviceRequestDto.getQuestion()
