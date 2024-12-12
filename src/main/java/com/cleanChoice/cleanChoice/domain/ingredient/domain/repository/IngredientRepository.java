@@ -31,7 +31,7 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     @Query(value = "SELECT * " +
             "FROM ingredient " +
-            "WHERE name LIKE :name OR korean_name LIKE :name",
+            "WHERE name LIKE CONCAT('%', :name, '%') OR korean_name LIKE CONCAT('%', :name, '%')",
             nativeQuery = true
     )
     List<Ingredient> findByNamePart(@Param("name") String name);
