@@ -1,5 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.shopBasket.controller;
 
+import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasketProductJoin;
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.request.CreateBasketRequestDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProductJoinResponseDto;
@@ -71,6 +72,17 @@ public class ShopBasketController {
     ) {
         return shopBasketService.getShopBasketProduct(customUserDetails.getMember(), shopBasketProductJoinId);
     }
+
+    @GetMapping("/recommend/{shopBasketId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "장바구니 내 추천 상품 조회", description = "장바구니 분석해 해당 장바구니에 해당하는 상품 추천을 합니다.")
+    public List<ProductMarketResponseDto> getRecommendProductMarketListByShopBasket(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long shopBasketId
+    ) {
+        return shopBasketService.getRecommendProductMarketListByShopBasket(customUserDetails.getMember(), shopBasketId);
+    }
+
 
     @DeleteMapping("/delete-product")
     @ResponseStatus(HttpStatus.OK)

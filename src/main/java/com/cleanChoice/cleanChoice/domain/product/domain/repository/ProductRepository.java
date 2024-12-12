@@ -18,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByDsldId(Long dsldId);
 
     @NotNull Page<Product> findAll(@NotNull Pageable pageable);
+
+    List<Product> findAllByBrandName(String brandName);
 }
