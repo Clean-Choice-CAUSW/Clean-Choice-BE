@@ -22,14 +22,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleBadRequestException(BadRequestException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(exception);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleConstraintViolationException(ConstraintViolationException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(
                                 new BadRequestException(ErrorCode.INVALID_PARAMETER)
                 );
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleIllegalArgumentException(IllegalArgumentException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(
                 new BadRequestException(ErrorCode.INVALID_PARAMETER)
         );
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleBadHttpRequestMethodException(HttpRequestMethodNotSupportedException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(
                 new BadRequestException(ErrorCode.INVALID_HTTP_METHOD)
         );
@@ -56,21 +56,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {UnauthorizedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDto handleUnauthorizedException(UnauthorizedException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(exception);
     }
 
     @ExceptionHandler(value = {ServiceUnavailableException.class})
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ErrorResponseDto handleServiceUnavailableException(ServiceUnavailableException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(exception);
     }
 
     @ExceptionHandler(value = {AccessDeniedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDto handleAccessDeniedException(AccessDeniedException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(
                 new UnauthorizedException(ErrorCode.API_NOT_ACCESSIBLE)
         );
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {AuthorizationDeniedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDto handleAuthorizationDeniedException(AuthorizationDeniedException exception) {
-        GlobalExceptionHandler.log.debug("[Error message]", exception);
+        GlobalExceptionHandler.log.error("[Error message]", exception);
         return ErrorResponseDto.of(
                 new UnauthorizedException(ErrorCode.API_NOT_ACCESSIBLE)
         );

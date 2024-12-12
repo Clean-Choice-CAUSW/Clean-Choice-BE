@@ -23,19 +23,19 @@ public class ProductIngredientJoinResponseDto {
     private IngredientResponseDto ingredientResponseDto;
 
     @Schema(description = "1회 복용양", example = "1")
-    private Double servingSize;
+    private String servingSize;
 
     @Schema(description = "1회 복용양 단위", example = "Tablet(s)")
     private String servingUnit;
 
     @Schema(description = "복용 당 성분 섭취량", example = "100")
-    private Double amountPerServing;
+    private String amountPerServing;
 
     @Schema(description = "복용 당 성분 섭취량 단위", example = "mg")
     private String amountPerServingUnit;
 
     @Schema(description = "일일 권장 섭취량 대비 비율(%)", example = "5882")
-    private Double dailyValuePerServing;
+    private String dailyValuePerServing;
 
     @Schema(description = "일일 권장 섭취량 기준 그룹 / 영어", example = "Adults and children 4 or more years of age")
     private String englishDailyValueTargetGroup;

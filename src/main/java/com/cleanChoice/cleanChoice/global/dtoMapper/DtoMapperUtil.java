@@ -66,29 +66,60 @@ public class DtoMapperUtil {
     }
 
     public ProductResponseDto toProductResponseDto(Product product, Member member) {
+        List<ProductIngredientJoinResponseDto> productIngredientJoinResponseDtoList = new ArrayList<>();
+        List<ProductLabelStatementResponseDto> productLabelStatementResponseDtoList = new ArrayList<>();
+
+        if (!(product.getProductIngredientJoinList() == null || product.getProductIngredientJoinList().isEmpty())) {
+            for (ProductIngredientJoin productIngredientJoin : product.getProductIngredientJoinList()) {
+                productIngredientJoinResponseDtoList.add(toProductIngredientJoinResponseDto(productIngredientJoin));
+            }
+        }
+
+        if (!(product.getProductLabelStatementList() == null || product.getProductLabelStatementList().isEmpty())) {
+            for (ProductLabelStatement productLabelStatement : product.getProductLabelStatementList()) {
+                productLabelStatementResponseDtoList.add(toProductLabelStatementResponseDto(productLabelStatement));
+            }
+        }
+
         return DtoMapper.INSTANCE.toProductResponseDto(
                 product,
-                product.getProductIngredientJoinList()
-                        .stream().map(this::toProductIngredientJoinResponseDto).toList(),
-                product.getProductLabelStatementList()
-                        .stream().map(this::toProductLabelStatementResponseDto).toList()
+                productIngredientJoinResponseDtoList,
+                productLabelStatementResponseDtoList
         );
     }
 
     public ProductIngredientJoinResponseDto toProductIngredientJoinResponseDto(ProductIngredientJoin productIngredientJoin) {
+        System.out.println(productIngredientJoin.getIngredient() == null);
+        IngredientResponseDto ingredientResponseDto = toIngredientResponseDto(productIngredientJoin.getIngredient());
+        System.out.println(ingredientResponseDto == null);
         return DtoMapper.INSTANCE.toProductIngredientJoinResponseDto(
                 productIngredientJoin,
-                toIngredientResponseDto(productIngredientJoin.getIngredient())
+                ingredientResponseDto
         );
     }
 
     public IngredientResponseDto toIngredientResponseDto(Ingredient ingredient) {
+        List<BanedIngredientInfoResponseDto> banedIngredientInfoResponseDtoList = new ArrayList<>();
+        List<CombineUseBanedIngredientInfoResponseDto> combineUseBanedIngredientInfoResponseDtoList = new ArrayList<>();
+
+        if (!(ingredient.getBanedIngredientInfoList() == null || ingredient.getBanedIngredientInfoList().isEmpty())) {
+            for (BanedIngredientInfo banedIngredientInfo : ingredient.getBanedIngredientInfoList()) {
+                banedIngredientInfoResponseDtoList.add(toBanedIngredientInfoResponseDto(banedIngredientInfo));
+            }
+        }
+
+        List<CombineUseBanedIngredientInfo> combineUseBanedIngredientInfoList = combineUseBanedIngredientRepository.findAllByIngredientAndCombineIngredient(ingredient.getId());
+
+        if (!(combineUseBanedIngredientInfoList == null || combineUseBanedIngredientInfoList.isEmpty())) {
+            for (CombineUseBanedIngredientInfo combineUseBanedIngredientInfo : combineUseBanedIngredientInfoList) {
+                combineUseBanedIngredientInfoResponseDtoList.add(toCombineUseBanedIngredientInfoResponseDto(combineUseBanedIngredientInfo));
+            }
+        }
+
         return DtoMapper.INSTANCE.toIngredientResponseDto(
                 ingredient,
-                ingredient.getBanedIngredientInfoList()
-                        .stream().map(this::toBanedIngredientInfoResponseDto).toList(),
-                combineUseBanedIngredientRepository.findAllByIngredientAndCombineIngredient(ingredient.getId())
-                        .stream().map(this::toCombineUseBanedIngredientInfoResponseDto).toList()
+                banedIngredientInfoResponseDtoList,
+                combineUseBanedIngredientInfoResponseDtoList
         );
     }
 

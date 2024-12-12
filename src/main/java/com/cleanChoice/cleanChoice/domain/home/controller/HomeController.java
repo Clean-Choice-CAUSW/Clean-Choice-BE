@@ -46,9 +46,9 @@ public class HomeController {
             "AnalyzeType이 LLM_PARSED일 경우 다시 보내면 안 됩니다.")
     public AnalyzeResponseDto analyzeWithDB(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody @Valid AnalyzeRequestDto homeRequestDto
+            @RequestBody @Valid AnalyzeRequestDto analyzeRequestDto
     ) {
-        return homeService.analyze(customUserDetails.getMember(), homeRequestDto);
+        return homeService.analyze(customUserDetails.getMember(), analyzeRequestDto);
     }
 
     /*

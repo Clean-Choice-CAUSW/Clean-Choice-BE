@@ -25,6 +25,7 @@ import com.cleanChoice.cleanChoice.domain.viewRecord.dto.response.ViewRecordResp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
 import java.lang.annotation.ElementType;
@@ -38,6 +39,7 @@ import java.util.List;
 @Mapping(target = "id", source = "entity.id")
 @Mapping(target = "createdAt", source = "entity.createdAt")
 @Mapping(target = "updatedAt", source = "entity.updatedAt")
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 @interface CommonEntityMappings {
 }
 
@@ -78,8 +80,8 @@ public interface DtoMapper {
     // Product
 
     @CommonEntityMappings
-    @Mapping(target = "productIngredientJoinResponseDtoList", source = "productIngredientJoinResponseDtoList")
-    @Mapping(target = "productLabelStatementResponseDtoList", source = "productLabelStatementResponseDtoList")
+    @Mapping(target = "productIngredientJoinResponseDtoList", source = "productIngredientJoinResponseDtoList", defaultExpression = "java(new ArrayList<>())")
+    @Mapping(target = "productLabelStatementResponseDtoList", source = "productLabelStatementResponseDtoList", defaultExpression = "java(new ArrayList<>())")
     ProductResponseDto toProductResponseDto(
             Product entity,
             List<ProductIngredientJoinResponseDto> productIngredientJoinResponseDtoList,
@@ -103,8 +105,8 @@ public interface DtoMapper {
     // Ingredient
 
     @CommonEntityMappings
-    @Mapping(target = "banedIngredientInfoResponseDtoList", source = "banedIngredientInfoResponseDtoList")
-    @Mapping(target = "combineUseBanedIngredientInfoResponseDtoList", source = "combineUseBanedIngredientInfoResponseDtoList")
+    @Mapping(target = "banedIngredientInfoResponseDtoList", source = "banedIngredientInfoResponseDtoList", defaultExpression = "java(new ArrayList<>())")
+    @Mapping(target = "combineUseBanedIngredientInfoResponseDtoList", source = "combineUseBanedIngredientInfoResponseDtoList", defaultExpression = "java(new ArrayList<>())")
     IngredientResponseDto toIngredientResponseDto(
             Ingredient entity,
             List<BanedIngredientInfoResponseDto> banedIngredientInfoResponseDtoList,
@@ -143,7 +145,7 @@ public interface DtoMapper {
 
     @CommonEntityMappings
     @Mapping(target = "memberId", source = "entity.member.id")
-    @Mapping(target = "shopBasketProductJoinResponseDtoList", source = "shopBasketProductJoinResponseDtoList")
+    @Mapping(target = "shopBasketProductJoinResponseDtoList", source = "shopBasketProductJoinResponseDtoList", defaultExpression = "java(new ArrayList<>())")
     ShopBasketResponseDto toShopBasketResponseDto(
             ShopBasket entity,
             List<ShopBasketProductJoinResponseDto> shopBasketProductJoinResponseDtoList

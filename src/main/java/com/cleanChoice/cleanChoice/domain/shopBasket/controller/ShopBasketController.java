@@ -1,11 +1,13 @@
 package com.cleanChoice.cleanChoice.domain.shopBasket.controller;
 
 import com.cleanChoice.cleanChoice.domain.shopBasket.domain.ShopBasketProductJoin;
+import com.cleanChoice.cleanChoice.domain.shopBasket.dto.request.CreateBasketRequestDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketProductJoinResponseDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.dto.response.ShopBasketResponseDto;
 import com.cleanChoice.cleanChoice.domain.shopBasket.service.ShopBasketService;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,9 +27,9 @@ public class ShopBasketController {
     @Operation(summary = "장바구니 생성", description = "장바구니를 생성합니다.")
     public ShopBasketResponseDto createShopBasket(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody String basketName
+            @RequestBody @Valid CreateBasketRequestDto createBasketRequestDto
     ) {
-        return shopBasketService.createShopBasket(customUserDetails.getMember(), basketName);
+        return shopBasketService.createShopBasket(customUserDetails.getMember(), createBasketRequestDto.getBasketName());
     }
 
     @PostMapping("/add-product")
