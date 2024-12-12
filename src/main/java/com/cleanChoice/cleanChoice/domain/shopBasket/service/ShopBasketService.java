@@ -166,7 +166,7 @@ public class ShopBasketService {
 
             List<ProductMarket> tempProductMarketList = new ArrayList<>();
             for (Product product : productList) {
-                tempProductMarketList.addAll(productMarketRepository.findAllByProduct(product))
+                tempProductMarketList.addAll(productMarketRepository.findAllByProduct(product));
             }
 
             for (ProductMarket tempProductMarket : tempProductMarketList) {
