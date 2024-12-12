@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/ingredient")
 @RequiredArgsConstructor
@@ -30,6 +32,15 @@ public class IngredientController {
             @RequestParam String name
     ) {
         return ingredientService.searchIngredientByName(name);
+    }
+
+    @GetMapping("/search/name/part")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "성분 일부만 입력해도 검색(영어, 한글 상관 없음)", description = "성분을 일부만 입력해도 해당 스트링이 이름에 들어있는 성분 검색하는 API")
+    public List<IngredientResponseDto> searchIngredientByNamePart(
+            @RequestParam String name
+    ) {
+        return ingredientService.searchIngredientByNamePart(name);
     }
 
 }

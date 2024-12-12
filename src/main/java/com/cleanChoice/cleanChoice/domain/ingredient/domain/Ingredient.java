@@ -35,7 +35,8 @@ public class Ingredient extends BaseEntity {
     private String koreanName;
 
     // 효능
-    @Column(name = "effectiveness", nullable = true)
+    @Setter
+    @Column(name = "effectiveness", nullable = true, columnDefinition = "TEXT")
     private String effectiveness;
 
     // 통관 금지 여부
@@ -87,6 +88,10 @@ public class Ingredient extends BaseEntity {
 
     public void addBanedIngredientInfo(BanedIngredientInfo banedIngredientInfo) {
         this.banedIngredientInfoList.add(banedIngredientInfo);
+    }
+
+    public void updateEnglishNameToLowerCase() {
+        this.englishName = this.englishName.toLowerCase();
     }
 
 }

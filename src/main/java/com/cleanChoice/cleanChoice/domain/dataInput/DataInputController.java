@@ -131,4 +131,28 @@ public class DataInputController {
         }
     }
 
+    @PostMapping("/ingredient/set-lowwer")
+    public void setIngredientNameLower() {
+        dataInputService.setIngredientNameLower();
+    }
+
+    @PostMapping(value = "/ingredient/effectiveness", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void setIngredientEffectiveness(
+            @RequestPart("file") MultipartFile file
+    ) {
+        try {
+            String fileContent = new String(file.getBytes(), StandardCharsets.UTF_8);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            List<CreateIngredientEffectivenessRequestDto> createIngredientEffectivenessRequestDtoList = Arrays.asList(
+                    objectMapper.readValue(fileContent, CreateIngredientEffectivenessRequestDto[].class)
+            );
+
+            dataInputService.setIngredientEffectiveness(createIngredientEffectivenessRequestDtoList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

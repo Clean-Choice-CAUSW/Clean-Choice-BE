@@ -11,6 +11,7 @@ import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.BanedIngredientInfoRepository;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.CombineUseBanedIngredientRepository;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.IngredientRepository;
+import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.IngredientRepositoryCustom;
 import com.cleanChoice.cleanChoice.domain.product.domain.*;
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.NameBrandNameVectorRepository;
 import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductIngredientJoinRepository;
@@ -48,6 +49,7 @@ public class DataInputService {
     private final CombineUseBanedIngredientRepository combineUseBanedIngredientRepository;
 
     private final EntityManager entityManager;
+    private final IngredientRepositoryCustom ingredientRepositoryCustom;
 
     @Transactional
     public void makeNameBrandNameVector() {
@@ -335,6 +337,59 @@ public class DataInputService {
         }
 
         if (!combineUseBanedIngredientInfoList.isEmpty()) combineUseBanedIngredientRepository.saveAll(combineUseBanedIngredientInfoList);
+    }
+
+    @Transactional
+    public void setIngredientNameLower() {
+        int page = 0; // 시작 페이지
+        int size = 10000; // 페이지 크기
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Ingredient> ingredientPage;
+
+        do {
+            LocalDateTime startTime = LocalDateTime.now();
+            // 페이지 단위로 Product 데이터 조회
+            ingredientPage = ingredientRepository.findAll(pageable);
+            List<Ingredient> ingredientList = ingredientPage.getContent();
+
+            ingredientList.forEach(Ingredient::updateEnglishNameToLowerCase);
+
+            ingredientRepository.saveAll(ingredientList);
+
+            try {
+                System.out.println(
+                        "[Page #]: " + pageable.getPageNumber() + " / " + ingredientPage.getTotalPages() +
+                                " - " + (LocalDateTime.now().getSecond() - startTime.getSecond()) + "s");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            // 다음 페이지로 이동
+            pageable = ingredientPage.nextPageable();
+        } while (ingredientPage.hasNext());
+    }
+
+    @Transactional
+    public void setIngredientEffectiveness(
+            List<CreateIngredientEffectivenessRequestDto> dtos
+    ) {
+        int batchSize = 100; // 배치 크기
+        int num = 0;
+        List<List<CreateIngredientEffectivenessRequestDto>> batches = partitionList(dtos, batchSize);
+        for (List<CreateIngredientEffectivenessRequestDto> batch : batches) {
+            ingredientRepositoryCustom.bulkUpdateEffectiveness(batch);
+            System.out.println("batch #: " + num);
+            num++;
+        }
+    }
+
+    public static <T> List<List<T>> partitionList(List<T> list, int batchSize) {
+        List<List<T>> partitions = new ArrayList<>();
+        int totalSize = list.size();
+        for (int i = 0; i < totalSize; i += batchSize) {
+            partitions.add(list.subList(i, Math.min(i + batchSize, totalSize)));
+        }
+        return partitions;
     }
 
 }
