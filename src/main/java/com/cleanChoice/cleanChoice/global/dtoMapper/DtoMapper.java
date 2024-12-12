@@ -74,7 +74,7 @@ public interface DtoMapper {
     @CommonEntityMappings
     @Mapping(target = "productResponseDto", source = "productResponseDto")
     @Mapping(target = "analyzeType", source = "analyzeType")
-    AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket entity, ProductResponseDto productResponseDto, AnalyzeType analyzeType);
+    AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket entity, ProductResponseDto productResponseDto, AnalyzeType analyzeType, String imageUrl);
 
 
     // Product

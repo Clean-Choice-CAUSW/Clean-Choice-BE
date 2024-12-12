@@ -1,29 +1,30 @@
 package com.cleanChoice.cleanChoice.domain.member.service;
 
+import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
-import com.cleanChoice.cleanChoice.domain.member.domain.Gender;
 import com.cleanChoice.cleanChoice.domain.member.domain.Member;
 import com.cleanChoice.cleanChoice.domain.member.domain.repository.MemberRepository;
+import com.cleanChoice.cleanChoice.domain.member.dto.request.*;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.JwtTokenResponseDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.SignInRequestDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.UpdateMemberRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.service.OpenAiService;
+import com.cleanChoice.cleanChoice.domain.product.domain.ProductIngredientJoin;
+import com.cleanChoice.cleanChoice.domain.product.domain.ProductMarket;
+import com.cleanChoice.cleanChoice.domain.product.domain.repository.ProductMarketRepository;
 import com.cleanChoice.cleanChoice.global.config.jwt.JwtTokenProvider;
 import com.cleanChoice.cleanChoice.global.config.redis.RedisUtils;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapper;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,7 @@ public class MemberService {
     private final RedisUtils redisUtils;
     private final JwtTokenProvider jwtTokenProvider;
     private final OpenAiService openAiService;
+    private final ProductMarketRepository productMarketRepository;
 
     @Transactional
     public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -135,16 +137,54 @@ public class MemberService {
         return toResponseDto(memberRepository.save(member));
     }
 
-    public String getAdvice(Member member, String question) {
-        List<IntakeIngredient> intakeIngredientList = member.getIntakeIngredientList();
+    public String getAdvice(Member member, GetAdviceRequestDto getAdviceRequestDto) {
+        member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
+
+        List<String> intakeIngredientNameList = getIntakeIngredientNameList(member);
+
+        String intakeIngredientListString = null;
+        if (!intakeIngredientNameList.isEmpty()) {
+            intakeIngredientListString = intakeIngredientNameList.stream().toList().toString();
+        }
+
+        ProductMarket productMarket = productMarketRepository.findById(getAdviceRequestDto.getProductMarketId())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST));
+
+        List<String> selectIngredientNameString = productMarket.getProduct().getProductIngredientJoinList()
+                .stream().map(ProductIngredientJoin::getIngredient)
+                .toList()
+                .stream().map(Ingredient::getEnglishName)
+                .toList();
+
+        String selectIngredientListString = null;
+
+        if (!selectIngredientNameString.isEmpty()) {
+            selectIngredientListString = selectIngredientNameString.stream().toList().toString();
+        }
 
         return openAiService.getAdvice(
                 member.getAge(),
                 member.getGender(),
                 member.getIsPregnant(),
-                intakeIngredientList,
-                question
+                intakeIngredientListString,
+                selectIngredientListString,
+                getAdviceRequestDto.getQuestion()
         );
+    }
+
+    private List<String> getIntakeIngredientNameList(Member member) {
+        List<IntakeIngredient> intakeIngredientList = member.getIntakeIngredientList();
+
+        List<String> intakeIngredientNameList = new ArrayList<>();
+
+        for (IntakeIngredient intakeIngredient : intakeIngredientList) {
+            if (intakeIngredient.getFakeName() != null) {
+                intakeIngredientNameList.add(intakeIngredient.getFakeName());
+            } else {
+                intakeIngredientNameList.add(intakeIngredient.getIngredient().getEnglishName());
+            }
+        }
+        return intakeIngredientNameList;
     }
 
     // private method

@@ -1,7 +1,6 @@
 package com.cleanChoice.cleanChoice.domain.openAi.service;
 
 import com.cleanChoice.cleanChoice.domain.home.dto.request.AnalyzeRequestDto;
-import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
 import com.cleanChoice.cleanChoice.domain.member.domain.Gender;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductIngredientJoinLLMResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductLabelStatementLLMResponseDto;
@@ -152,10 +151,10 @@ public class OpenAiService {
         // ProductMarket 만들기
         ProductMarket productMarket = ProductMarket.of(
                 product,
-                productMarketLLMResponseDto.getImageUrl(),
+                analyzeRequestDto.getImageUrl() != null ? analyzeRequestDto.getImageUrl() : productMarketLLMResponseDto.getImageUrl(),
                 analyzeRequestDto.getUrl(),
-                productMarketLLMResponseDto.getPrice(),
-                productMarketLLMResponseDto.getPriceUnit()
+                analyzeRequestDto.getPrice() != null ? analyzeRequestDto.getPrice() : productMarketLLMResponseDto.getPrice(),
+                analyzeRequestDto.getPriceUnit() != null ? analyzeRequestDto.getPriceUnit() : productMarketLLMResponseDto.getPriceUnit()
         );
 
         // product에 productMarket 추가해주기
@@ -182,14 +181,19 @@ public class OpenAiService {
             Integer age,
             Gender gender,
             Boolean isPregnant,
-            List<IntakeIngredient> intakeIngredientList,
+            String intakeIngredientListString,
+            String selectIngredientListString,
             String question
     ) {
+        if (intakeIngredientListString == null) intakeIngredientListString = "";
+        if (selectIngredientListString == null) selectIngredientListString = "";
+
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("age", age);
         requestBody.put("gender", gender);
         requestBody.put("isPregnant", isPregnant);
-        requestBody.put("intakeIngredientList", intakeIngredientList);
+        requestBody.put("intakeIngredientListString", intakeIngredientListString);
+        requestBody.put("selectIngredientListString", selectIngredientListString);
         requestBody.put("question", question);
 
         return webClient.post()

@@ -1,11 +1,8 @@
 package com.cleanChoice.cleanChoice.domain.member.controller;
 
+import com.cleanChoice.cleanChoice.domain.member.dto.request.*;
 import com.cleanChoice.cleanChoice.domain.member.service.MemberService;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.JwtTokenResponseDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.SignInRequestDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.SignUpRequestDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.SignoutRequestDto;
-import com.cleanChoice.cleanChoice.domain.member.dto.request.UpdateMemberRequestDto;
 import com.cleanChoice.cleanChoice.domain.member.dto.response.MemberResponseDto;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,14 +92,14 @@ public class MemberController {
         return memberService.updateMember(customUserDetails.getMember(), updateMemberRequestDto);
     }
 
-    @GetMapping("/advice")
+    @PostMapping("/advice")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "유저 정보 기반 조언 조회(question null로 보낼 시 유저 기본 정보 토대로 조언, 있을 시, 질문 기반 답변)", description = "추천 정보를 조회합니다.")
     public String getAdvice(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody(required = false) String question
+            @RequestBody @Valid GetAdviceRequestDto getAdviceRequestDto
     ) {
-        return memberService.getAdvice(customUserDetails.getMember(), question);
+        return memberService.getAdvice(customUserDetails.getMember(), getAdviceRequestDto);
     }
 
 }

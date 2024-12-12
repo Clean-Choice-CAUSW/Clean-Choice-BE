@@ -71,7 +71,7 @@ public class HomeService {
         if (!productMarketList.isEmpty()) {
             ProductMarket productMarket = productMarketList.get(0);
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE_URL, member);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE_URL, member, analyzeRequestDto.getImageUrl());
         }
 
         NameVectorWithDistanceDto nameVectorWithDistanceDto = null;
@@ -115,7 +115,7 @@ public class HomeService {
             );
             nameBrandNameVectorRepository.save(nameBrandNameVector);
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.LLM_ANALYZE, member);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.LLM_ANALYZE, member, analyzeRequestDto.getImageUrl());
         }
         // ProductMarket에 대한 결과 없는 경우
         else if (nameVectorWithDistanceDto.getNameBrandNameVector().getProductMarket() == null) {
@@ -140,14 +140,15 @@ public class HomeService {
             return dtoMapperUtil.toAnalyzeResponseDto(
                     productMarket,
                     AnalyzeType.DB_MAKE,
-                    member
+                    member,
+                    analyzeRequestDto.getImageUrl()
             );
         }
         // ProductMarket에 대한 결과 있는 경우
         else {
             ProductMarket productMarket = nameVectorWithDistanceDto.getNameBrandNameVector().getProductMarket();
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE, member);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE, member, analyzeRequestDto.getImageUrl());
         }
     }
 

@@ -37,11 +37,12 @@ public class DtoMapperUtil {
     private final CombineUseBanedIngredientRepository combineUseBanedIngredientRepository;
     private final PersonalizedInfoRepository personalizedInfoRepository;
 
-    public AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket productMarket, AnalyzeType analyzeType, Member member) {
+    public AnalyzeResponseDto toAnalyzeResponseDto(ProductMarket productMarket, AnalyzeType analyzeType, Member member, String imageUrl) {
         return DtoMapper.INSTANCE.toAnalyzeResponseDto(
                 productMarket,
                 toProductResponseDto(productMarket.getProduct(), member),
-                analyzeType
+                analyzeType,
+                imageUrl
         );
     }
 

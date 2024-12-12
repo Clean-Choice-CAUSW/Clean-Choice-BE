@@ -23,6 +23,9 @@ public class AnalyzeResponseDto {
     @Schema(description = "상품 시장 url", example = "https://www.amazon.com")
     private String url;
 
+    @Schema(description = "상품 메인 이미지 url")
+    private String imageUrl;
+
     @Schema(description = "상품 가격(수)", example = "10000")
     private Long price;
 
