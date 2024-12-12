@@ -28,12 +28,12 @@ public interface NameBrandNameVectorRepository extends JpaRepository<NameBrandNa
             "(nbnv.name_vector <=> CAST(:target_name_vector AS vector)) AS name_distance, " +
             "(nbnv.brand_name_vector <=> CAST(:target_brand_name_vector AS vector)) AS brand_name_distance " +
             "FROM name_brand_name_vector nbnv " +
-            "WHERE (nbnv.brand_name_vector <=> CAST(:target_brand_name_vector AS vector)) <= 0.5 " +
+            //"WHERE (nbnv.brand_name_vector <=> CAST(:target_brand_name_vector AS vector)) <= 0.9 " +
             //"ORDER BY (nbnv.name_vector <=> CAST(:target_name_vector AS vector)) ASC " +
             "ORDER BY name_distance ASC " +
             "LIMIT 1",
             nativeQuery = true)
-    List<Object []> findNameBrandNameVectorByCosineDistanceTop1WithDistance(
+    Object [] findNameBrandNameVectorByCosineDistanceTop1WithDistance(
             @Param("target_name_vector") String target_name_vector,
             @Param("target_brand_name_vector") String target_brand_name_vector
     );

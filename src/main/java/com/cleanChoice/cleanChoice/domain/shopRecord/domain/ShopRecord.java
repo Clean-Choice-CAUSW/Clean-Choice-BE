@@ -12,7 +12,11 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "shop_record")
+@Table(name = "shop_record",
+        indexes = {
+        @Index(name = "sr_member_idx", columnList = "member_id")
+        }
+)
 public class ShopRecord extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

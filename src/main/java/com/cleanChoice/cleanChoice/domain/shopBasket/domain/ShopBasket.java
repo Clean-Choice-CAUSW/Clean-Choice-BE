@@ -12,7 +12,11 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "shop_basket")
+@Table(name = "shop_basket",
+        indexes = {
+        @Index(name = "sb_member_idx", columnList = "member_id")
+        }
+)
 public class ShopBasket extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

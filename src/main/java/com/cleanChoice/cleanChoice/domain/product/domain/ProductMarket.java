@@ -10,8 +10,9 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "product_market",
-indexes = {
-    @Index(name = "product_idx", columnList = "product_id")
+        indexes = {
+        @Index(name = "pm_product_idx", columnList = "product_id"),
+        @Index(name = "pm_url_idx", columnList = "market_name")
 })
 public class ProductMarket extends BaseEntity {
 

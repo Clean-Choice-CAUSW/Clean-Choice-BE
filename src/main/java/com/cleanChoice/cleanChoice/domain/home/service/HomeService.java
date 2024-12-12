@@ -17,15 +17,15 @@ import com.cleanChoice.cleanChoice.domain.viewRecord.service.ViewRecordService;
 import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
-import com.cleanChoice.cleanChoice.global.util.URLValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -46,15 +46,19 @@ public class HomeService {
             Member member,
             AnalyzeRequestDto analyzeRequestDto
     ) {
+        /*
         Mono<Boolean> urlValidation = URLValidator.validateUrl(analyzeRequestDto.getUrl());
         Mono<Boolean> imageUrlValidation = URLValidator.validateImageUrl(analyzeRequestDto.getImageUrl());
+        */
 
         List<ProductMarket> productMarketList = productMarketRepository.findAllByUrl(analyzeRequestDto.getUrl());
 
+        /*
         if (urlValidation.blockOptional().orElse(false)) {
             if (!productMarketList.isEmpty()) {
                 productMarketRepository.delete(productMarketList.get(0));
             }
+            System.out.println(urlValidation.blockOptional().toString() + analyzeRequestDto.getUrl());
             throw new BadRequestException(ErrorCode.INVALID_PARAMETER, "Invalid URL");
         }
 
@@ -62,10 +66,12 @@ public class HomeService {
             throw new BadRequestException(ErrorCode.INVALID_PARAMETER, "Invalid Image URL");
         }
 
+         */
+
         if (!productMarketList.isEmpty()) {
             ProductMarket productMarket = productMarketList.get(0);
 
-            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE, member);
+            return dtoMapperUtil.toAnalyzeResponseDto(productMarket, AnalyzeType.DB_ANALYZE_URL, member);
         }
 
         NameVectorWithDistanceDto nameVectorWithDistanceDto = null;
@@ -86,11 +92,11 @@ public class HomeService {
         nameVectorWithDistanceDto = findNameBrandNameVectorByCosineDistanceTop1WithDistance(embResponseDto)
                 .orElse(null);
 
-        // Cosine Distance search 결과 없거나, ProductMarket에 대한 결과가 없는 경우
+        // Cosine Distance search 결과 없을 경우
         if (nameVectorWithDistanceDto == null) {
             // LLM 호출
             ProductMarket productMarket = this.getProductMarketByLLMRequest(
-                    analyzeRequestDto.getUrl(),
+                    analyzeRequestDto,
                     null
             );
 
@@ -146,7 +152,7 @@ public class HomeService {
     }
 
     @Transactional
-    public ProductMarketResponseDto resultCorrect(Member member, Long productMarketId, Boolean isCorrect, AnalyzeType analyzeType) {
+    public ProductMarketResponseDto resultCorrect(Member member, Long productMarketId, Boolean isCorrect, AnalyzeType analyzeType, AnalyzeRequestDto analyzeRequestDto) {
         if (analyzeType.equals(AnalyzeType.LLM_ANALYZE))
             throw new BadRequestException(ErrorCode.INVALID_PARAMETER, "AnalyzeType LLM_ANALYZE is now allowed in this API");
 
@@ -175,7 +181,7 @@ public class HomeService {
                 nameBrandNameVectorRepository.delete(wrongNameBrandNameVector);
             }
 
-            productMarket = getProductMarketByLLMRequest(productMarket.getUrl(), null);
+            productMarket = getProductMarketByLLMRequest(analyzeRequestDto, null);
 
             // view record 저장
             viewRecordService.createViewRecord(member, productMarket);
@@ -197,26 +203,29 @@ public class HomeService {
     }
 
     private Optional<NameVectorWithDistanceDto> findNameBrandNameVectorByCosineDistanceTop1WithDistance(EmbResponseDto embResponseDto) {
-        List<Object []> resultList = nameBrandNameVectorRepository.findNameBrandNameVectorByCosineDistanceTop1WithDistance(
+        Object [] resultArr = nameBrandNameVectorRepository.findNameBrandNameVectorByCosineDistanceTop1WithDistance(
                 embResponseDto.getProductNameVectorList().toString(),
                 embResponseDto.getBrandNameVectorList().toString()
         );
 
-        if (resultList.isEmpty()) {
+        if (resultArr.length != 0) {
+            log.info("empty");
             return Optional.empty();
         }
 
-        return Optional.of(
-                NameVectorWithDistanceDto.of(
-                        (NameBrandNameVector) resultList.get(0)[0],
-                        (Double) resultList.get(0)[1],
-                        (Double) resultList.get(0)[2]
-                )
+        NameVectorWithDistanceDto nameVectorWithDistanceDto = NameVectorWithDistanceDto.of(
+                (NameBrandNameVector) resultArr[0],
+                (Double) resultArr[1],
+                (Double) resultArr[2]
         );
+
+        log.info("{}\n{}\n{}", resultArr[0].toString(), resultArr[1].toString(), resultArr[2].toString());
+
+        return Optional.of(nameVectorWithDistanceDto);
     }
 
-    private ProductMarket getProductMarketByLLMRequest(String url, Product product) {
-        ProductMarket productMarket = openAiService.packProductMarket(url, product);
+    private ProductMarket getProductMarketByLLMRequest(AnalyzeRequestDto analyzeRequestDto, Product product) {
+        ProductMarket productMarket = openAiService.packProductMarket(analyzeRequestDto, product);
 
         // cascade로 인해 product, productIngredientJoin, productLabelStatement, productMarket, productIngredientJoin, ingredient 모두 저장됨
         return productMarketRepository.save(productMarket);

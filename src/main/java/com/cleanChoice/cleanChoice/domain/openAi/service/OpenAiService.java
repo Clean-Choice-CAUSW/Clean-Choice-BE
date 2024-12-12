@@ -1,36 +1,27 @@
 package com.cleanChoice.cleanChoice.domain.openAi.service;
 
+import com.cleanChoice.cleanChoice.domain.home.dto.request.AnalyzeRequestDto;
 import com.cleanChoice.cleanChoice.domain.intakeIngredient.domain.IntakeIngredient;
 import com.cleanChoice.cleanChoice.domain.member.domain.Gender;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductIngredientJoinLLMResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductLabelStatementLLMResponseDto;
 import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductMarketLLMResponseDto;
-import com.cleanChoice.cleanChoice.domain.openAi.dto.OpenAiRequestDto;
-import com.cleanChoice.cleanChoice.domain.openAi.dto.OpenAiResponseDto;
-import com.cleanChoice.cleanChoice.domain.openAi.util.OpenAiResponseDtoText;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanType;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.BanedIngredientInfo;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.Ingredient;
 import com.cleanChoice.cleanChoice.domain.ingredient.domain.repository.IngredientRepository;
 import com.cleanChoice.cleanChoice.domain.product.domain.*;
-import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
-import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
-import com.cleanChoice.cleanChoice.global.exceptions.InternalServerException;
-import com.cleanChoice.cleanChoice.global.util.URLValidator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MimeType;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -44,10 +35,15 @@ public class OpenAiService {
     @Value("${openai.api_url}")
     private String apiUrl;
 
+    @Value("${flask.completion-url}")
+    private String flaskCompletionUrl;
+
+    private final WebClient webClient;
+
     private final IngredientRepository ingredientRepository;
 
-    public ProductMarket packProductMarket(String marketUrl, Product product) {
-        ProductMarketLLMResponseDto productMarketLLMResponseDto = this.getCompletion(marketUrl);
+    public ProductMarket packProductMarket(AnalyzeRequestDto analyzeRequestDto, Product product) {
+        ProductMarketLLMResponseDto productMarketLLMResponseDto = this.getCompletion(analyzeRequestDto);
 
         if (product == null) {
             // 기존 Product 없으면 그냥 새로 Product 만들기(단, dsldId랑 dsldUrl은 null로)
@@ -157,7 +153,7 @@ public class OpenAiService {
         ProductMarket productMarket = ProductMarket.of(
                 product,
                 productMarketLLMResponseDto.getImageUrl(),
-                marketUrl,
+                analyzeRequestDto.getUrl(),
                 productMarketLLMResponseDto.getPrice(),
                 productMarketLLMResponseDto.getPriceUnit()
         );
@@ -168,112 +164,18 @@ public class OpenAiService {
         return productMarket;
     }
 
-    private ProductMarketLLMResponseDto getCompletion(String marketUrl) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + apiKey);
-        headers.add("Content-Type", "application/json");
+    public ProductMarketLLMResponseDto getCompletion(AnalyzeRequestDto analyzeRequestDto) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("html", analyzeRequestDto.getHtml());
+        requestBody.put("imageUrlList", analyzeRequestDto.getImageUrlList());
 
-        OpenAiRequestDto.OpenAiMessageDto judgeMessage = this.buildMessage("user",
-                "Is this url health functional food e-commerce product detail page?Answer Only Y/N\n" + marketUrl);
-        OpenAiRequestDto.OpenAiMessageDto productMarketMessage = this.buildMessage("user",
-                OpenAiResponseDtoText.PRODUCT_MARKET.getPrompt() + " URL:" + marketUrl + "\n" + OpenAiResponseDtoText.PRODUCT_MARKET.getText());
-        OpenAiRequestDto.OpenAiMessageDto ingredientMessage = this.buildMessage("user",
-                OpenAiResponseDtoText.PRODUCT_INGREDIENT_JOIN.getPrompt() + " URL:" + marketUrl + "\n" + OpenAiResponseDtoText.PRODUCT_INGREDIENT_JOIN.getText());
-        OpenAiRequestDto.OpenAiMessageDto labelMessage = this.buildMessage("user",
-                OpenAiResponseDtoText.PRODUCT_LABEL_STATEMENT.getPrompt() + " URL:" + marketUrl + "\n" + OpenAiResponseDtoText.PRODUCT_LABEL_STATEMENT.getText());
-
-        String judgeResponse = requestToOpenAi(
-                buildRequest(headers, "gpt-4o-mini", List.of(judgeMessage), 0.7)
-        );
-
-        if (!judgeResponse.equals("Y")) {
-            throw new BadRequestException(ErrorCode.INVALID_PARAMETER, "This url is not health functional food e-commerce product detail page.");
-        }
-
-        String jsonProductMarketString = requestToOpenAi(
-                buildRequest(headers, "gpt-4o", List.of(productMarketMessage), 0.7)
-        );
-
-        String jsonIngredientString = requestToOpenAi(
-                buildRequest(headers, "gpt-4o", List.of(ingredientMessage), 0.7)
-        );
-
-        String jsonLabelString = requestToOpenAi(
-                buildRequest(headers, "gpt-4o", List.of(labelMessage), 0.7)
-        );
-
-        jsonProductMarketString = jsonProductMarketString.replace("```json\n", "").replace("```", "");
-        jsonIngredientString = jsonIngredientString.replace("```json\n", "").replace("```", "");
-        jsonLabelString = jsonLabelString.replace("```json\n", "").replace("```", "");
-
-        ProductMarketLLMResponseDto productMArketLLMREsponseDto = toProductMarketLLMResponseDto(
-                jsonProductMarketString,
-                jsonIngredientString,
-                jsonLabelString
-        );
-
-        return validateProductMarketLLMResponseDto(productMArketLLMREsponseDto);
-    }
-
-    private OpenAiRequestDto.OpenAiMessageDto buildMessage(String role, String content) {
-        return new OpenAiRequestDto.OpenAiMessageDto(role, content);
-    }
-
-    private HttpEntity<OpenAiRequestDto> buildRequest(HttpHeaders headers, String model, List<OpenAiRequestDto.OpenAiMessageDto> messages, double temperature) {
-
-        return new HttpEntity<>(new OpenAiRequestDto(model, messages, temperature), headers);
-    }
-
-    private String requestToOpenAi(HttpEntity<OpenAiRequestDto> requestDtoHttpEntity) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<OpenAiResponseDto> response = restTemplate.postForEntity(apiUrl, requestDtoHttpEntity, OpenAiResponseDto.class);
-        Object responseBody = response.getBody();
-        if (responseBody == null) {
-            throw new InternalServerException(ErrorCode.INTERNAL_SERVER, "Failed to get response from OpenAI.");
-        }
-        return response.getBody().getChoices().get(0).getMessage().getContent();
-    }
-
-    private ProductMarketLLMResponseDto toProductMarketLLMResponseDto(String jsonProductMarketString, String jsonIngredientString, String jsonLabelString) {
-        /*
-        log.info("jsonProductMarketString: {}", jsonProductMarketString);
-        log.info("jsonIngredientString: {}", jsonIngredientString);
-        log.info("jsonLabelString: {}", jsonLabelString);
-         */
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            // Parse product Json
-            ProductMarketLLMResponseDto productMarketLLMResponseDto = objectMapper.readValue(jsonProductMarketString, ProductMarketLLMResponseDto.class);
-            List<ProductIngredientJoinLLMResponseDto> productIngredientJoinLLMResponseDtoList = objectMapper.readValue(jsonIngredientString, objectMapper.getTypeFactory().constructCollectionType(List.class, ProductIngredientJoinLLMResponseDto.class));
-            List<ProductLabelStatementLLMResponseDto> productLabelStatementLLMResponseDtoList = objectMapper.readValue(jsonLabelString, objectMapper.getTypeFactory().constructCollectionType(List.class, ProductLabelStatementLLMResponseDto.class));
-            productMarketLLMResponseDto.setProductIngredientJoinLLMResponseDtoList(productIngredientJoinLLMResponseDtoList);
-            productMarketLLMResponseDto.setProductLabelStatementLLMResponseDtoList(productLabelStatementLLMResponseDtoList);
-
-            return productMarketLLMResponseDto;
-        } catch (JsonProcessingException e) {
-            throw new InternalServerException(ErrorCode.INTERNAL_SERVER, e.toString());
-        }
-    }
-
-    private ProductMarketLLMResponseDto validateProductMarketLLMResponseDto(ProductMarketLLMResponseDto productMarketLLMResponseDto) {
-        if (productMarketLLMResponseDto == null) {
-            throw new InternalServerException(ErrorCode.INTERNAL_SERVER, "Failed to get product market information.");
-        }
-
-        Mono<Boolean> isImageUrlValid = URLValidator.validateImageUrl(productMarketLLMResponseDto.getImageUrl());
-
-        if (productMarketLLMResponseDto.getPrice() != null ^ productMarketLLMResponseDto.getPriceUnit() != null) {
-            productMarketLLMResponseDto.setPrice(null);
-            productMarketLLMResponseDto.setPriceUnit(null);
-        }
-
-        if (isImageUrlValid.blockOptional().orElse(false)) {
-            productMarketLLMResponseDto.setImageUrl(null);
-        }
-
-        return productMarketLLMResponseDto;
+        // Flask API 호출 및 응답 매핑
+        return webClient.post()
+                .uri( flaskCompletionUrl + "/gen-completion")
+                .bodyValue(requestBody) // 요청 본문 설정
+                .retrieve()
+                .bodyToMono(ProductMarketLLMResponseDto.class) // 응답을 DTO로 변환
+                .block(); // 동기 처리
     }
 
     public String getAdvice(
@@ -283,47 +185,19 @@ public class OpenAiService {
             List<IntakeIngredient> intakeIngredientList,
             String question
     ) {
-        StringBuilder questionBuilder = new StringBuilder();
-        questionBuilder.append("저는 ")
-                .append(age)
-                .append("살이고, ")
-                .append("성별은 ")
-                .append(gender.getValue())
-                .append("고 ");
-        if (isPregnant) questionBuilder.append("임신 중이고 ");
-        questionBuilder.append("다음 성분을 섭취했어요\n");
-        for (IntakeIngredient intakeIngredient : intakeIngredientList) {
-            if (intakeIngredient.getFakeName() != null) {
-                questionBuilder.append(intakeIngredient.getFakeName())
-                        .append(" ")
-                        .append(intakeIngredient.getAmount())
-                        .append(intakeIngredient.getUnit())
-                        .append("\n");
-                continue;
-            }
-            questionBuilder.append(
-                    intakeIngredient.getIngredient().getKoreanName() == null ?
-                            intakeIngredient.getIngredient().getEnglishName() :
-                            intakeIngredient.getIngredient().getKoreanName() +
-                                    " " + intakeIngredient.getAmount() + intakeIngredient.getUnit() + "\n"
-            );
-        }
-        if (question == null || question.isBlank()) {
-            questionBuilder.append("제 정보를 기반으로 주의 사항 및 조언을 알려주세요");
-        } else {
-            questionBuilder.append("그리고 제 질문은 ").append(question);
-        }
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("age", age);
+        requestBody.put("gender", gender);
+        requestBody.put("isPregnant", isPregnant);
+        requestBody.put("intakeIngredientList", intakeIngredientList);
+        requestBody.put("question", question);
 
-
-        OpenAiRequestDto.OpenAiMessageDto message = this.buildMessage("user", questionBuilder.toString());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + apiKey);
-        headers.add("Content-Type", "application/json");
-
-        return requestToOpenAi(
-                buildRequest(headers, "gpt-4o", List.of(message), 0.7)
-        );
+        return webClient.post()
+                .uri(flaskCompletionUrl + "/get-advice")
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
 }

@@ -46,16 +46,17 @@ public class DtoMapperUtil {
 
     public ProductMarketResponseDto toProductMarketResponseDto(ProductMarket productMarket, Member member) {
         List<PersonalizedInfo> personalizedInfoList = personalizedInfoRepository.findByProductMarketAndMember(productMarket, member);
-        if (personalizedInfoList.size() != 1) {
-            throw new InternalServerException(ErrorCode.INTERNAL_SERVER);
-        }
-        PersonalizedInfo personalizedInfo = personalizedInfoList.get(0);
 
         Product fakeProduct = productMarket.getProduct();
-        fakeProduct.maskWithPersonalizedInfo(personalizedInfo);
 
-        productMarket.maskWithPersonalizedInfo(personalizedInfo, fakeProduct);
+        if (personalizedInfoList.size() > 1) {
+            throw new InternalServerException(ErrorCode.INTERNAL_SERVER);
+        } else if (personalizedInfoList.size() == 1) {
+            PersonalizedInfo personalizedInfo = personalizedInfoList.get(0);
 
+            fakeProduct.maskWithPersonalizedInfo(personalizedInfo);
+            productMarket.maskWithPersonalizedInfo(personalizedInfo, fakeProduct);
+        }
 
         return DtoMapper.INSTANCE.toProductMarketResponseDto(
                 productMarket,
@@ -85,7 +86,7 @@ public class DtoMapperUtil {
                 ingredient,
                 ingredient.getBanedIngredientInfoList()
                         .stream().map(this::toBanedIngredientInfoResponseDto).toList(),
-                combineUseBanedIngredientRepository.findAllByIngredientAndCombineIngredient(ingredient)
+                combineUseBanedIngredientRepository.findAllByIngredientAndCombineIngredient(ingredient.getId())
                         .stream().map(this::toCombineUseBanedIngredientInfoResponseDto).toList()
         );
     }

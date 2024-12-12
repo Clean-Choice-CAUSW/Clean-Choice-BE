@@ -14,7 +14,13 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "name_brand_name_vector")
+@Table(name = "name_brand_name_vector",
+indexes = {
+        @Index(name = "nbnv_product_idx", columnList = "product_id"),
+        @Index(name = "nbnv_brand_idx", columnList = "brand_id"),
+        @Index(name = "nbnv_nameVector_idx", columnList = "name_vector"),
+        @Index(name = "nbnv_brandNameVector_idx", columnList = "brand_name_vector")
+})
 public class NameBrandNameVector extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

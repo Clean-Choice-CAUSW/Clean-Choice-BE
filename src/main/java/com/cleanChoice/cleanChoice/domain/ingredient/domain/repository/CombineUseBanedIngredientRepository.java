@@ -13,9 +13,9 @@ import java.util.List;
 public interface CombineUseBanedIngredientRepository extends JpaRepository<CombineUseBanedIngredientInfo, Long> {
 
     @Query(value = "SELECT * " +
-            "FROM combine_use_baned_ingredient_info " +
-            "WHERE ingredient_id = :ingredient OR combine_ingredient_id = :ingredient",
+            "FROM combine_use_baned_ingredient " +
+            "WHERE ingredient_id = :ingredientId OR combine_ingredient_id = :ingredientId",
             nativeQuery = true)
-    List<CombineUseBanedIngredientInfo> findAllByIngredientAndCombineIngredient(@Param("ingredient") Ingredient ingredient);
+    List<CombineUseBanedIngredientInfo> findAllByIngredientAndCombineIngredient(@Param("ingredient") Long ingredientId);
 
 }

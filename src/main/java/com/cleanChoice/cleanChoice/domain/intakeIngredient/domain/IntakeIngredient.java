@@ -11,7 +11,10 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "intake_ingredient")
+@Table(name = "intake_ingredient",
+        indexes = {
+        @Index(name = "ii_member_idx", columnList = "member_id")
+})
 public class IntakeIngredient extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

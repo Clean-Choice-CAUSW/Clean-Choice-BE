@@ -85,6 +85,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/v1/emb/**").permitAll()
                                 .requestMatchers("api/v1/openai/**").permitAll()
                                 .requestMatchers("api/v1/dataInput/**").permitAll()
+                                .requestMatchers("api/v1/home/test-completion").permitAll()
                                 // Swagger UI에 대해서는 모든 요청을 허가
                                 .requestMatchers(
                                         "/auth/**",

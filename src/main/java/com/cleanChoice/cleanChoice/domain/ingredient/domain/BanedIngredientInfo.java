@@ -9,7 +9,10 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "pregnant_baned_ingredient")
+@Table(name = "pregnant_baned_ingredient",
+indexes = {
+        @Index(name = "bi_ingredient_idx", columnList = "ingredient_id")
+})
 public class BanedIngredientInfo extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

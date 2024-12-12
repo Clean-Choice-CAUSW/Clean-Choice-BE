@@ -9,7 +9,11 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "product_label_statement")
+@Table(name = "product_label_statement",
+        indexes = {
+        @Index(name = "pls_product_idx", columnList = "product_id")
+        }
+)
 public class ProductLabelStatement extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -18,14 +22,14 @@ public class ProductLabelStatement extends BaseEntity {
 
     // ex: Precautions
     @Enumerated(EnumType.STRING)
-    @Column(name = "statement_type", nullable = false)
+    @Column(name = "statement_type", nullable = true)
     private StatementType statementType;
 
     // ex: WARNING: If you are pregnant, nursing or taking any medications, consult your doctor before use. Discontinue use and consult your doctor if any adverse reactions occur. Keep out of reach of children. Store in a cool, dry place. Do not use if seal under cap is broken or missing.
-    @Column(name = "english_statement", nullable = false)
+    @Column(name = "english_statement", nullable = true, columnDefinition = "TEXT")
     private String englishStatement;
 
-    @Column(name = "korean_statement", nullable = false)
+    @Column(name = "korean_statement", nullable = true)
     private String koreanStatement;
 
     public static ProductLabelStatement of(

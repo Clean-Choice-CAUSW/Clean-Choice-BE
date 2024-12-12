@@ -2,8 +2,10 @@ package com.cleanChoice.cleanChoice.domain.home.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,11 +31,18 @@ public class AnalyzeRequestDto {
     private String imageUrl;
 
     @Schema(description = "상품 가격(수) nullable 임", example = "10000", requiredMode = Schema.RequiredMode.REQUIRED)
-    @Positive(message = "price 는 0보다 커야 합니다.")
+    @NotNull(message = "price 는 0보다 커야 합니다.")
     private Long price;
 
     @Schema(description = "상품 가격 단위 nullable 임", example = "USD", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "priceUnit 은 필수 입력 값입니다.")
     private String priceUnit;
+
+    @Schema(description = "상품 상세 페이지 html 텍스트")
+    @NotBlank(message = "html은 필수 입력 값입니다. 공백 안 됩니다.")
+    private String html;
+
+    @Schema(description = "상품 상세 페이지 이미지들")
+    private List<String> imageUrlList;
 
 }

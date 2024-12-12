@@ -46,9 +46,11 @@ public enum OpenAiResponseDtoText {
                     "private Long price;\n" +
                     "@Schema(description = \"상품 가격 단위\", example = \"USD\")\n" +
                     "private String priceUnit;}",
-            //"Please give me the information about the main product on this website in accordance with the Spring DTO below. It should be the information about the main product and only give me the json.\nSchema is an example, so just refer to it and provide only the information on the website or the information on the photos on the website"
-            "이 웹사이트에 있는 메인 상품에 대한 정보를 아래 Spring DTO에 맞게 json을 줘 메인 상품에 대한 정보여야만 하고 json만 줘.\n" +
-                    "Schema는 예시니까 참고만하고 웹사이트에 있는 정보 혹은 웹사이트에 있는 사진에 있는 정보로만 제공해줘 만약 웹사이트에 없는 정보면 필드를 null로 줘."
+            "아래의 spring DTO에 따라 이 url에 주요 제품에 대한 정보를 제공해 줘\n" +
+                    "주요 제품에 대한 정보여야 해\n" +
+                    "스키마는 예시이므로 참고하여 url의 정보나 url 속에 사진 정보만 제공해\n" +
+                    "url 속에 정보가 없으면 null 필드를 줘\n" +
+                    "dto에 해당하는 json만 대답해"
     ),
 
     PRODUCT_INGREDIENT_JOIN(
@@ -79,9 +81,11 @@ public enum OpenAiResponseDtoText {
                     "private String englishDailyValueTargetGroup;\n" +
                     "@Schema(description = \"일일 권장 섭취량 기준 그룹\", example = \"4세 이상 어린이 및 성인\")\n" +
                     "private String koreanDailyValueTargetGroup;}",
-            //"Please give me the information on the main product on this website as a list in accordance with the Spring DTO below. It must be the information on the main product and only give me the json.\nSchema is an example, so just refer to it and provide only the information on the website or the information on the photos on the website"
-            "이 웹사이트에 있는 메인 상품에 대한 정보를 아래 Spring DTO에 맞게 json 리스트 줘 메인 상품에 대한 정보여야만 하고 json만 줘.\n" +
-                    "Schema는 예시니까 참고만하고 웹사이트에 있는 정보 혹은 웹사이트에 있는 사진에 있는 정보로만 제공해줘 만약 웹사이트에 없는 정보면 필드를 null로 줘."
+            "아래의 spring DTO에 따라 이 url에 주요 제품에 대한 정보를 제공해 줘\n" +
+                    "주요 제품에 대한 정보여야 해\n" +
+                    "스키마는 예시이므로 참고하여 url의 정보나 url 속에 사진 정보만 제공해\n" +
+                    "url 속에 정보가 없으면 null 필드를 줘\n" +
+                    "dto에 해당하는 json만 대답해"
     ),
 
     PRODUCT_LABEL_STATEMENT(
@@ -90,9 +94,11 @@ public enum OpenAiResponseDtoText {
                     "private String englishLabelStatement;\n" +
                     "@Schema(description = \"라벨 문구(한글)\", example = \"비유전자변형\")\n" +
                     "private String koreanLabelStatement;}",
-            //"Please give me the information on the main product on this website as a list in accordance with the Spring DTO below. It must be the information on the main product and only give me the json.\nSchema is an example, so just refer to it and provide only the information on the website or the information on the photos on the website"
-            "이 웹사이트에 있는 메인 상품에 대한 정보를 아래 Spring DTO에 맞게 json 리스트를 줘 메인 상품에 대한 정보여야만 하고 json만 줘.\n" +
-                    "Schema는 예시니까 참고만하고 웹사이트에 있는 정보 혹은 웹사이트에 있는 사진에 있는 정보로만 제공해줘 만약 웹사이트에 없는 정보면 필드를 null로 줘."
+            "아래의 spring DTO에 따라 이 url에 주요 제품에 대한 정보를 제공해 줘\n" +
+            "주요 제품에 대한 정보여야 해\n" +
+            "스키마는 예시이므로 참고하여 url의 정보나 url 속에 사진 정보만 제공해\n" +
+                    "url 속에 정보가 없으면 null 필드를 줘\n" +
+                    "dto에 해당하는 json만 대답해"
     );
 
     private final String text;

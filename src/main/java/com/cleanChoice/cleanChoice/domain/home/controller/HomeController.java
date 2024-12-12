@@ -3,15 +3,20 @@ package com.cleanChoice.cleanChoice.domain.home.controller;
 import com.cleanChoice.cleanChoice.domain.home.dto.response.AnalyzeResponseDto;
 import com.cleanChoice.cleanChoice.domain.home.service.HomeService;
 import com.cleanChoice.cleanChoice.domain.home.dto.request.AnalyzeRequestDto;
+import com.cleanChoice.cleanChoice.domain.openAi.dto.convert.ProductMarketLLMResponseDto;
+import com.cleanChoice.cleanChoice.domain.openAi.service.OpenAiService;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.AnalyzeType;
 import com.cleanChoice.cleanChoice.domain.product.dto.response.ProductMarketResponseDto;
 import com.cleanChoice.cleanChoice.global.config.security.userDetails.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/home")
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     private final HomeService homeService;
+    private final OpenAiService openAiService;
 
     /*
     1. Product Market 데이터 비교 후 url 완전 일치 시 return
@@ -67,9 +73,25 @@ public class HomeController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestHeader Long productMarketId,
             @RequestHeader Boolean isCorrect,
-            @RequestHeader AnalyzeType analyzeType
+            @RequestHeader AnalyzeType analyzeType,
+            @RequestBody @Valid AnalyzeRequestDto analyzeRequestDto
             ) {
-        return homeService.resultCorrect(customUserDetails.getMember(), productMarketId, isCorrect, analyzeType);
+        return homeService.resultCorrect(customUserDetails.getMember(), productMarketId, isCorrect, analyzeType, analyzeRequestDto);
+    }
+
+    @GetMapping("/test-completion")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "test api 입니다. 사용X")
+    public ProductMarketLLMResponseDto testCompletion(
+            //@RequestBody @Valid AnalyzeRequestDto analyzeRequestDto
+    ) {
+        String htmlContent = "<img alt=\"Centrum Silver Men&amp;#39;s 50+ Multivitamin with Vitamin D3, B-Vitamins, Zinc for Memory and Cognition - 200 Tablets\" src=\"https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SX569_.jpg\" data-old-hires=\"https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SL1500_.jpg\" onload=\"markFeatureRenderForImageBlock(); if(this.width/this.height > 1.0){this.className += ' a-stretch-horizontal'}else{this.className += ' a-stretch-vertical'};this.onload='';setCSMReq('af');if(typeof addlongPoleTag === 'function'){ addlongPoleTag('af','desktop-image-atf-marker');};setCSMReq('cf')\" data-a-image-name=\"landingImage\" class=\"a-dynamic-image a-stretch-vertical\" id=\"landingImage\" data-a-dynamic-image=\"{&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SX466_.jpg&quot;:[466,466],&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SX425_.jpg&quot;:[425,425],&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SX522_.jpg&quot;:[522,522],&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SX679_.jpg&quot;:[679,679],&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SY450_.jpg&quot;:[450,450],&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SX569_.jpg&quot;:[569,569],&quot;https://m.media-amazon.com/images/I/71kh-hE7hVL._AC_SY355_.jpg&quot;:[355,355]}\" style=\"max-width: 276.427px; max-height: 568px;\"><span id=\"productTitle\" class=\"a-size-large product-title-word-break\">Centrum Silver Men's 50+ Multivitamin with Vitamin D3, B-Vitamins, Zinc for Memory and Cognition - 200 Tablets</span>";
+
+        AnalyzeRequestDto analyzeRequestDto1 = AnalyzeRequestDto.builder()
+                .html(htmlContent)
+                .imageUrlList(List.of())
+                .build();
+        return openAiService.getCompletion(analyzeRequestDto1);
     }
 
 }

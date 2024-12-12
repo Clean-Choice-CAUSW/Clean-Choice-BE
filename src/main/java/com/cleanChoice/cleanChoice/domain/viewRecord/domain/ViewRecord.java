@@ -11,7 +11,11 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "view_record")
+@Table(name = "view_record",
+        indexes = {
+        @Index(name = "vr_member_idx", columnList = "member_id")
+        }
+)
 public class ViewRecord extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

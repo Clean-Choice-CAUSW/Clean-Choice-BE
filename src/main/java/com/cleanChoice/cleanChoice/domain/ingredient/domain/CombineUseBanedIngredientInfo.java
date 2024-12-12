@@ -12,7 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "combine_use_baned_ingredient")
+@Table(name = "combine_use_baned_ingredient",
+indexes = {
+        @Index(name = "cubi_ingredient_idx", columnList = "ingredient_id"),
+        @Index(name ="cubi_combine_ingredient_idx", columnList = "combine_ingredient_id")
+})
 public class CombineUseBanedIngredientInfo extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
