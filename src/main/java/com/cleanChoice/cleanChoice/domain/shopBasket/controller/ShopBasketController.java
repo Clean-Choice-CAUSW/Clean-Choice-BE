@@ -25,7 +25,7 @@ public class ShopBasketController {
     @Operation(summary = "장바구니 생성", description = "장바구니를 생성합니다.")
     public ShopBasketResponseDto createShopBasket(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestHeader String basketName
+            @RequestBody String basketName
     ) {
         return shopBasketService.createShopBasket(customUserDetails.getMember(), basketName);
     }

@@ -27,6 +27,7 @@ import com.cleanChoice.cleanChoice.global.exceptions.InternalServerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -113,12 +114,17 @@ public class DtoMapperUtil {
     }
 
     public ShopBasketResponseDto toShopBasketResponseDto(ShopBasket shopBasket, Member member) {
+        List<ShopBasketProductJoin> shopBasketProductJoinList = shopBasket.getShopBasketProductJoinList();
+        List<ShopBasketProductJoinResponseDto> shopBasketProductJoinResponseDtoList = new ArrayList<>();
+        if (!(shopBasketProductJoinList == null || shopBasketProductJoinList.isEmpty())) {
+            for (ShopBasketProductJoin shopBasketProductJoin : shopBasketProductJoinList) {
+                shopBasketProductJoinResponseDtoList.add(toShopBasketProductJoinResponseDto(shopBasketProductJoin, member));
+            }
+        }
+
         return DtoMapper.INSTANCE.toShopBasketResponseDto(
                 shopBasket,
-                shopBasket.getShopBasketProductJoinList()
-                        .stream().map(shopBasketProductJoin -> {
-                            return toShopBasketProductJoinResponseDto(shopBasketProductJoin, member);
-                        }).toList()
+                shopBasketProductJoinResponseDtoList
         );
     }
 
