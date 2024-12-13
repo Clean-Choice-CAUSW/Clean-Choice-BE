@@ -7,7 +7,6 @@ import com.cleanChoice.cleanChoice.global.dtoMapper.DtoMapperUtil;
 import com.cleanChoice.cleanChoice.global.exceptions.BadRequestException;
 import com.cleanChoice.cleanChoice.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +29,13 @@ public class IngredientService {
         );
     }
 
-    public IngredientResponseDto searchIngredientByName(String name) {
-        return dtoMapperUtil.toIngredientResponseDto(
-                ingredientRepository.findByName(name)
-                        .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST))
-        );
+    public List<IngredientResponseDto> searchIngredientByName(String name) {
+        List<Ingredient> ingredientList = ingredientRepository.findAllByName(name);
+
+        return ingredientList
+                .stream()
+                .map(dtoMapperUtil::toIngredientResponseDto)
+                .toList();
     }
 
     public List<IngredientResponseDto> searchIngredientByNamePart(String name) {
