@@ -31,11 +31,9 @@ public class AnalyzeRequestDto {
     private String imageUrl;
 
     @Schema(description = "상품 가격(수) nullable 임", example = "10000", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "price 는 0보다 커야 합니다.")
-    private Long price;
+    private Double price;
 
     @Schema(description = "상품 가격 단위 nullable 임", example = "USD", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "priceUnit 은 필수 입력 값입니다.")
     private String priceUnit;
 
     @Schema(description = "상품 상세 페이지 html 텍스트")

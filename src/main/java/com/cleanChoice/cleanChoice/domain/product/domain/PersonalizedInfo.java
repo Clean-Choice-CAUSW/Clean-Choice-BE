@@ -27,7 +27,7 @@ public class PersonalizedInfo extends BaseEntity {
     private Member member;
 
     @Column(name = "price", nullable = true)
-    private Long price;
+    private Double price;
 
     @Column(name = "price_unit", nullable = true)
     private String priceUnit;

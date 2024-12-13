@@ -27,7 +27,7 @@ public class ProductMarket extends BaseEntity {
     private String imageUrl;
 
     @Column(name = "price", nullable = true)
-    private Long price;
+    private Double price;
 
     @Column(name = "price_unit", nullable = true)
     private String priceUnit;
@@ -48,7 +48,7 @@ public class ProductMarket extends BaseEntity {
             Product product,
             String imageUrl,
             String url,
-            Long price,
+            Double price,
             String priceUnit
     ) {
         return ProductMarket.builder()
