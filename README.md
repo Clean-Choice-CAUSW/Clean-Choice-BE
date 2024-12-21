@@ -9,7 +9,7 @@ Clean Choice는 중앙대학교 소프트웨어학부의 캡스톤 디자인 프
 4. PostgreSQL에 Pg_vector extension 설치
 5. `src\main\resources`에 gitignore file - `application.yml` 만들기. yml파일 내에 private 변수(eg. `spring.datasource.datasource.url`)에 적절한 값 넣어주기.
 6. 외부 flask 서버, redis 등에 올바른 주소와 포트 넣어주기
-```
+```yml
 spring:
   application:
     name: clean-choice
