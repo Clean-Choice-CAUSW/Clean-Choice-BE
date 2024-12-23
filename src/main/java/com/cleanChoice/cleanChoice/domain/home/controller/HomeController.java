@@ -71,9 +71,9 @@ public class HomeController {
                     "사용자 선택이 틀렸다고 하면 LLM 분석 후 DB에 저장합니다. DB_ANALYZE, DB_MAKE일 경우에만 보내야 합니다.")
     public ProductMarketResponseDto resultCorrect(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestHeader Long productMarketId,
-            @RequestHeader Boolean isCorrect,
-            @RequestHeader AnalyzeType analyzeType,
+            @RequestParam(name = "productMarketId") Long productMarketId,
+            @RequestParam(name = "isCorrect") Boolean isCorrect,
+            @RequestParam(name = "analyzeType") AnalyzeType analyzeType,
             @RequestBody @Valid AnalyzeRequestDto analyzeRequestDto
             ) {
         return homeService.resultCorrect(customUserDetails.getMember(), productMarketId, isCorrect, analyzeType, analyzeRequestDto);

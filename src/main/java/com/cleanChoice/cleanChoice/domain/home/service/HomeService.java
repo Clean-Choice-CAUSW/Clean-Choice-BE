@@ -203,6 +203,25 @@ public class HomeService {
         }
     }
 
+    public Optional<NameBrandNameVector> cosTest(EmbResponseDto embResponseDto) {
+        Object [] resultArr = nameBrandNameVectorRepository.findNameBrandNameVectorByCosineDistanceTop1WithDistance(
+                embResponseDto.getProductNameVectorList().toString(),
+                embResponseDto.getBrandNameVectorList().toString()
+        );
+        if (resultArr.length != 0) {
+            log.info("empty");
+            return Optional.empty();
+        }
+        NameVectorWithDistanceDto nameVectorWithDistanceDto = NameVectorWithDistanceDto.of(
+                (NameBrandNameVector) resultArr[0],
+                (Double) resultArr[1],
+                (Double) resultArr[2]
+        );
+
+        log.info("{}\n{}\n{}", resultArr[0].toString(), resultArr[1].toString(), resultArr[2].toString());
+        return Optional.of(nameVectorWithDistanceDto.getNameBrandNameVector());
+    }
+
     private Optional<NameVectorWithDistanceDto> findNameBrandNameVectorByCosineDistanceTop1WithDistance(EmbResponseDto embResponseDto) {
         Object [] resultArr = nameBrandNameVectorRepository.findNameBrandNameVectorByCosineDistanceTop1WithDistance(
                 embResponseDto.getProductNameVectorList().toString(),
